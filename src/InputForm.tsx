@@ -8,10 +8,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
+import { all, create } from "mathjs"
 import moment from "moment"
 import { Dispatch, SetStateAction } from "react"
 import { InputState } from "../src/InputState"
 import { toDecimal, toMoney } from "./Calculate"
+
+const mathjs = create(all, {})
 
 interface Props {
   state: InputState
@@ -27,6 +30,7 @@ interface MoneyInputProps {
 function MoneyInput({ value, onChange, decimals = 2 }: MoneyInputProps) {
   return (
     <TextField
+      size="small"
       value={value}
       onChange={(e) => {
         let parts = e.target.value.split(".")
@@ -42,30 +46,62 @@ function MoneyInput({ value, onChange, decimals = 2 }: MoneyInputProps) {
   )
 }
 
+interface DecimalInputProps {
+  value: string
+  onChange: (newValue: string) => void
+  decimals?: number
+}
+
+function DecimalInput({ value, onChange, decimals = 2 }: DecimalInputProps) {
+  return (
+    <TextField
+      size="small"
+      value={value}
+      onChange={(e) => {
+        let parts = e.target.value.split(".")
+        if (parts.length > 2) {
+          onChange(parts.slice(0, 2).join("."))
+        }
+        onChange(e.target.value)
+      }}
+      onBlur={(e) => {
+        onChange(toDecimal(value).toFixed(decimals))
+      }}
+    />
+  )
+}
+
 export function InputForm({ state, setState }: Props) {
   return (
     <>
       <Typography variant="h1">Retirement Calculator</Typography>
-      <Typography>
-        Estimates at what age you can be financially independent.
+      <Typography sx={{ marginBottom: 3 }}>
+        Save your data by copying the URL and sharing it with others. You can
+        bookmark this page to save your data.
       </Typography>
-      <br />
-      <br />
-      <br />
       <Typography variant="h2">Your Ages</Typography>
-      <Table>
+      <Table sx={{ marginBottom: 3 }}>
         <TableHead>
           <TableRow>
-            <TableCell></TableCell>
+            <TableCell>Names</TableCell>
             <TableCell>Birth Date</TableCell>
             <TableCell>Current Age</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell>Person 1</TableCell>
             <TableCell>
               <TextField
+                size="small"
+                value={state.person1Name}
+                onChange={(e) => {
+                  setState({ ...state, person1Name: e.target.value })
+                }}
+              />
+            </TableCell>
+            <TableCell>
+              <TextField
+                size="small"
                 type="date"
                 value={state.person1Birthday}
                 onChange={(e) => {
@@ -78,9 +114,18 @@ export function InputForm({ state, setState }: Props) {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Person 2</TableCell>
             <TableCell>
               <TextField
+                size="small"
+                value={state.person2Name}
+                onChange={(e) => {
+                  setState({ ...state, person2Name: e.target.value })
+                }}
+              />
+            </TableCell>
+            <TableCell>
+              <TextField
+                size="small"
                 type="date"
                 value={state.person2Birthday}
                 onChange={(e) => {
@@ -94,17 +139,15 @@ export function InputForm({ state, setState }: Props) {
           </TableRow>
         </TableBody>
       </Table>
-      <br />
-      <br />
-      <br />
       <Typography variant="h2">Take Home Pay</Typography>
+
       <Typography>
         This is the amount of money you take home after taxes and deductions
         that you wish to continue spending during retirement to maintain your
         current lifestyle. You can exclude money that you additionaly put into
         savings since you will no longer do that during retirement.
       </Typography>
-      <Table>
+      <Table sx={{ marginBottom: 3 }}>
         <TableHead>
           <TableRow>
             <TableCell>Annual Take Home Pay</TableCell>
@@ -127,9 +170,7 @@ export function InputForm({ state, setState }: Props) {
           </TableRow>
         </TableBody>
       </Table>
-      <br />
-      <br />
-      <br />
+
       <Typography variant="h2">Social Security Benefits</Typography>
       <Typography>
         Get your Personalized Monthly Retirement Benefit Estimates by signing in
@@ -139,12 +180,12 @@ export function InputForm({ state, setState }: Props) {
         </Link>{" "}
         and find it on page 1 of your statement PDF.
       </Typography>
-      <Table>
+      <Table sx={{ marginBottom: 3 }}>
         <TableHead>
           <TableRow>
             <TableCell>Start Age</TableCell>
-            <TableCell>Person 1</TableCell>
-            <TableCell>Person 2</TableCell>
+            <TableCell>{state.person1Name}</TableCell>
+            <TableCell>{state.person2Name}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -184,11 +225,8 @@ export function InputForm({ state, setState }: Props) {
         </TableBody>
       </Table>
 
-      <br />
-      <br />
-      <br />
       <Typography variant="h2">Your Retirement Buckets</Typography>
-      <Table>
+      <Table sx={{ marginBottom: 3 }}>
         <TableHead>
           <TableRow>
             <TableCell></TableCell>
@@ -273,11 +311,108 @@ export function InputForm({ state, setState }: Props) {
               />
             </TableCell>
           </TableRow>
+
+          <TableRow>
+            <TableCell>Totals</TableCell>
+            <TableCell>
+              {toMoney(
+                mathjs
+                  .chain(toDecimal(state.bucket1Value))
+                  .add(toDecimal(state.bucket2Value))
+                  .add(toDecimal(state.bucket3Value))
+                  .done()
+              )}
+            </TableCell>
+            <TableCell>
+              {toMoney(
+                mathjs
+                  .chain(toDecimal(state.bucket1Contribution))
+                  .add(toDecimal(state.bucket2Contribution))
+                  .add(toDecimal(state.bucket3Contribution))
+                  .done()
+              )}
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
-      <br />
-      <br />
-      <br />
+
+      <Typography variant="h2">Other Settings</Typography>
+      <Table sx={{ marginBottom: 3 }}>
+        <TableHead>
+          <TableRow>
+            <TableCell>Current Price</TableCell>
+            <TableCell>Appreciation</TableCell>
+            <TableCell>Dividend</TableCell>
+            <TableCell>Inflation</TableCell>
+            <TableCell>Tax Rate</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>
+              <MoneyInput
+                value={state.stockPrice}
+                onChange={(stockPrice) => {
+                  setState({
+                    ...state,
+                    stockPrice,
+                  })
+                }}
+                decimals={2}
+              />
+            </TableCell>
+
+            <TableCell>
+              <DecimalInput
+                value={state.stockAppreciation}
+                onChange={(stockAppreciation) => {
+                  setState({
+                    ...state,
+                    stockAppreciation,
+                  })
+                }}
+                decimals={4}
+              />
+            </TableCell>
+            <TableCell>
+              <DecimalInput
+                value={state.stockDividendRate}
+                onChange={(stockDividendRate) => {
+                  setState({
+                    ...state,
+                    stockDividendRate,
+                  })
+                }}
+                decimals={5}
+              />
+            </TableCell>
+            <TableCell>
+              <DecimalInput
+                value={state.inflationRate}
+                onChange={(inflationRate) => {
+                  setState({
+                    ...state,
+                    inflationRate,
+                  })
+                }}
+                decimals={5}
+              />
+            </TableCell>
+            <TableCell>
+              <DecimalInput
+                value={state.effectiveTaxRate}
+                onChange={(effectiveTaxRate) => {
+                  setState({
+                    ...state,
+                    effectiveTaxRate,
+                  })
+                }}
+                decimals={5}
+              />
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </>
   )
 }

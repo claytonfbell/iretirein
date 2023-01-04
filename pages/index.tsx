@@ -1,4 +1,4 @@
-import { Container, CssBaseline } from "@mui/material"
+import { Box, Container, CssBaseline } from "@mui/material"
 import LZUTF8 from "lzutf8"
 import moment from "moment"
 import Head from "next/head"
@@ -6,9 +6,12 @@ import { useEffect, useState } from "react"
 import { Calculate } from "../src/Calculate"
 import { InputForm } from "../src/InputForm"
 import { InputState } from "../src/InputState"
+import { Providers } from "../src/Providers"
 
 export default function Home() {
   const [state, setState] = useState<InputState>({
+    person1Name: "Person 1",
+    person2Name: "Person 2",
     person1Birthday: moment("1978-09-22 00:00:00").toISOString(),
     person2Birthday: moment("1976-06-29 00:00:00").toISOString(),
     person1SocialSecurity: ["0", "0", "0", "0", "0", "0", "0", "0", "0"],
@@ -19,7 +22,12 @@ export default function Home() {
     bucket2Contribution: "0",
     bucket3Value: "0",
     bucket3Contribution: "0",
-    takeHomePay: "0",
+    takeHomePay: "80000",
+    stockAppreciation: "0.09",
+    stockDividendRate: ".0133",
+    stockPrice: "133",
+    inflationRate: "0.038",
+    effectiveTaxRate: "0.15",
   })
 
   const [loaded, setLoaded] = useState(false)
@@ -44,7 +52,7 @@ export default function Home() {
   }, [])
 
   return (
-    <>
+    <Providers>
       <Head>
         <title>iretirein.com</title>
         <meta name="description" content="Retirement calculartor" />
@@ -56,8 +64,10 @@ export default function Home() {
         {/* <pre>{debug}</pre> */}
         {/* <pre>{JSON.stringify(state, null, 2)}</pre> */}
         <InputForm state={state} setState={setState} />
-        <Calculate state={state} />
+        <Box sx={{ marginTop: 6 }}>
+          <Calculate state={state} />
+        </Box>
       </Container>
-    </>
+    </Providers>
   )
 }

@@ -1,4 +1,6 @@
 export interface InputState {
+  person1Name: string
+  person2Name: string
   person1Birthday: string | null
   person2Birthday: string | null
   person1SocialSecurity: string[]
@@ -10,4 +12,9 @@ export interface InputState {
   bucket3Value: string
   bucket3Contribution: string
   takeHomePay: string
+  stockAppreciation: string
+  stockDividendRate: string
+  stockPrice: string
+  inflationRate: string
+  effectiveTaxRate: string
 }
