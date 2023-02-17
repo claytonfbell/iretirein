@@ -338,17 +338,9 @@ export function InputForm({ state, setState }: Props) {
 
       <Typography variant="h2">Other Settings</Typography>
       <Table sx={{ marginBottom: 3 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Current Price</TableCell>
-            <TableCell>Appreciation</TableCell>
-            <TableCell>Dividend</TableCell>
-            <TableCell>Inflation</TableCell>
-            <TableCell>Tax Rate</TableCell>
-          </TableRow>
-        </TableHead>
         <TableBody>
           <TableRow>
+            <TableCell>Current Price</TableCell>
             <TableCell>
               <MoneyInput
                 value={state.stockPrice}
@@ -361,7 +353,9 @@ export function InputForm({ state, setState }: Props) {
                 decimals={2}
               />
             </TableCell>
-
+          </TableRow>
+          <TableRow>
+            <TableCell>Appreciation</TableCell>
             <TableCell>
               <DecimalInput
                 value={state.stockAppreciation}
@@ -374,6 +368,9 @@ export function InputForm({ state, setState }: Props) {
                 decimals={4}
               />
             </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Dividend</TableCell>
             <TableCell>
               <DecimalInput
                 value={state.stockDividendRate}
@@ -386,6 +383,9 @@ export function InputForm({ state, setState }: Props) {
                 decimals={5}
               />
             </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Inflation</TableCell>
             <TableCell>
               <DecimalInput
                 value={state.inflationRate}
@@ -398,6 +398,9 @@ export function InputForm({ state, setState }: Props) {
                 decimals={5}
               />
             </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Tax Rate</TableCell>
             <TableCell>
               <DecimalInput
                 value={state.effectiveTaxRate}
@@ -405,6 +408,21 @@ export function InputForm({ state, setState }: Props) {
                   setState({
                     ...state,
                     effectiveTaxRate,
+                  })
+                }}
+                decimals={5}
+              />
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Withdrawal Rate</TableCell>
+            <TableCell>
+              <DecimalInput
+                value={state.withdrawalRate}
+                onChange={(withdrawalRate) => {
+                  setState({
+                    ...state,
+                    withdrawalRate,
                   })
                 }}
                 decimals={5}

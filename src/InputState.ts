@@ -17,4 +17,5 @@ export interface InputState {
   stockPrice: string
   inflationRate: string
   effectiveTaxRate: string
+  withdrawalRate: string
 }

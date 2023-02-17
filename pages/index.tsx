@@ -28,6 +28,7 @@ export default function Home() {
     stockPrice: "133",
     inflationRate: "0.038",
     effectiveTaxRate: "0.15",
+    withdrawalRate: "0.04",
   })
 
   const [loaded, setLoaded] = useState(false)

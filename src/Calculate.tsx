@@ -129,8 +129,8 @@ function YourNumber({ numbers, state }: YourNumberProps) {
       </Typography>
       <Typography variant="h3" sx={{ marginBottom: 2 }}>
         Safe withdrawal rate starting at{" "}
-        {mathjs.round(mathjs.multiply(numbers.safeWithdrawalRate, 100), 2)}% and
-        rising annually with inflation rate of{" "}
+        {mathjs.round(mathjs.multiply(toDecimal(state.withdrawalRate), 100), 2)}
+        % and rising annually with inflation rate of{" "}
         {mathjs.multiply(toDecimal(state.inflationRate), 100)}%.
       </Typography>
       <br />
@@ -476,11 +476,6 @@ function findNumbersForMonth(
       .asYears()
   )
 
-  const safeWithdrawalRate = Math.max(
-    0.035,
-    0.05 - (140 - (person1Age + person2Age)) * 0.0006
-  )
-
   const healthInsuranceGap =
     Math.max(0, (65 - person1Age) * 15000) +
     Math.max(0, (65 - person2Age) * 15000)
@@ -502,7 +497,9 @@ function findNumbersForMonth(
   const withdrawal = withdrawalIncome + tax
 
   const requiredPortfolioValue =
-    withdrawal / safeWithdrawalRate + healthInsuranceGap + ssGap
+    mathjs.divide(withdrawal, toDecimal(state.withdrawalRate)) +
+    healthInsuranceGap +
+    ssGap
 
   return {
     month,
@@ -510,7 +507,6 @@ function findNumbersForMonth(
     year,
     person1Age,
     person2Age,
-    safeWithdrawalRate,
     healthInsuranceGap,
     ssGap,
     ssIncome,
