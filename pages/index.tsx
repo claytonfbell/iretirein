@@ -61,7 +61,7 @@ export default function Home() {
         <link rel="icon" href="/favicon-32x32.png" />
       </Head>
       <CssBaseline />
-      <Container>
+      <Container sx={{ marginTop: 3, paddingLeft: 0, paddingRight: 0 }}>
         {/* <pre>{debug}</pre> */}
         {/* <pre>{JSON.stringify(state, null, 2)}</pre> */}
         <InputForm state={state} setState={setState} />

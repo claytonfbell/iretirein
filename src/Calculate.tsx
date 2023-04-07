@@ -1,4 +1,5 @@
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -112,45 +113,51 @@ function YourNumber({ numbers, state }: YourNumberProps) {
 
   return (
     <>
-      <Typography variant="h2" sx={{ marginBottom: 2 }}>
-        {numbers.year} is your year to be financially independent!
-      </Typography>
-      <Typography variant="h3" sx={{ marginBottom: 2 }}>
-        That is {moment().add(numbers.month, "months").fromNow()}, and you will
-        be {numbers.person1Age} and {numbers.person2Age} years old.
-      </Typography>
-      <Typography variant="h3" sx={{ marginBottom: 2 }}>
-        Your portfolio will may be worth {toMoney(numbers.cumulativeValue, 0)}.
-      </Typography>
+      <Box padding={2}>
+        <Typography variant="h2" sx={{ marginBottom: 2 }}>
+          {numbers.year} is your year to be financially independent!
+        </Typography>
+        <Typography variant="h3" sx={{ marginBottom: 2 }}>
+          That is {moment().add(numbers.month, "months").fromNow()}, and you
+          will be {numbers.person1Age} and {numbers.person2Age} years old.
+        </Typography>
+        <Typography variant="h3" sx={{ marginBottom: 2 }}>
+          Your portfolio will may be worth {toMoney(numbers.cumulativeValue, 0)}
+          .
+        </Typography>
 
-      <Typography variant="h3" sx={{ marginBottom: 2 }}>
-        Assumes an effective tax rate of{" "}
-        {mathjs.multiply(toDecimal(state.effectiveTaxRate), 100)}%.
-      </Typography>
-      <Typography variant="h3" sx={{ marginBottom: 2 }}>
-        Safe withdrawal rate starting at{" "}
-        {mathjs.round(mathjs.multiply(toDecimal(state.withdrawalRate), 100), 2)}
-        % and rising annually with inflation rate of{" "}
-        {mathjs.multiply(toDecimal(state.inflationRate), 100)}%.
-      </Typography>
+        <Typography variant="h3" sx={{ marginBottom: 2 }}>
+          Assumes an effective tax rate of{" "}
+          {mathjs.multiply(toDecimal(state.effectiveTaxRate), 100)}%.
+        </Typography>
+        <Typography variant="h3" sx={{ marginBottom: 2 }}>
+          Safe withdrawal rate starting at{" "}
+          {mathjs.round(
+            mathjs.multiply(toDecimal(state.withdrawalRate), 100),
+            2
+          )}
+          % and rising annually with inflation rate of{" "}
+          {mathjs.multiply(toDecimal(state.inflationRate), 100)}%.
+        </Typography>
+      </Box>
+
       <br />
-      <br />
-      <br />
-      <br />
-      <Table>
+      <Table size="small" stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Months</TableCell>
             <TableCell>Date</TableCell>
             <TableCell>Ages</TableCell>
-            <TableCell>Stock Price</TableCell>
-            <TableCell>Contribute / Sold</TableCell>
-            <TableCell>Dividends</TableCell>
-            <TableCell>New Shares</TableCell>
-            <TableCell>Total Shares</TableCell>
+            <TableCell>+/-</TableCell>
+            <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+              Dividends
+            </TableCell>
+            <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+              SS Income
+            </TableCell>
+            <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+              Health Care
+            </TableCell>
             <TableCell>Total Value</TableCell>
-            <TableCell>SS Income</TableCell>
-            <TableCell>Health Care Cost</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -158,9 +165,8 @@ function YourNumber({ numbers, state }: YourNumberProps) {
             <>
               {schedule.all.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell>{row.month}</TableCell>
                   <TableCell>
-                    {moment().add(row.month, "months").format("MMMM, YYYY")}
+                    {moment().add(row.month, "months").format("M/YYYY")}
                   </TableCell>
                   <TableCell>
                     {moment()
@@ -171,7 +177,6 @@ function YourNumber({ numbers, state }: YourNumberProps) {
                       .add(row.month, "months")
                       .diff(moment(state.person2Birthday), "years")}
                   </TableCell>
-                  <TableCell>{toMoney(row.endingPrice, 0)}</TableCell>
                   <TableCell
                     sx={{
                       color: row.contribution > 0 ? "green" : "red",
@@ -179,28 +184,20 @@ function YourNumber({ numbers, state }: YourNumberProps) {
                   >
                     {toMoney(row.contribution, 0)}
                   </TableCell>
-                  <TableCell>{toMoney(row.dividendAmount, 0)}</TableCell>
-                  <TableCell
-                    sx={{
-                      color: row.newShares > 0 ? "green" : "red",
-                    }}
-                  >
-                    {mathjs.round(row.newShares, 1).toLocaleString()}
+                  <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+                    {toMoney(row.dividendAmount, 0)}
                   </TableCell>
-                  <TableCell>
-                    {mathjs.round(row.cumulativeShares, 1).toLocaleString()}
-                  </TableCell>
-                  <TableCell>{toMoney(row.cumulativeValue, 0)}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
                     {row.ssIncome !== undefined
                       ? toMoney(row.ssIncome, 0)
                       : null}
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
                     {row.healthInsuranceGap !== undefined
                       ? toMoney(row.healthInsuranceGap, 0)
                       : null}
                   </TableCell>
+                  <TableCell>{toMoney(row.cumulativeValue, 0)}</TableCell>
                 </TableRow>
               ))}
             </>

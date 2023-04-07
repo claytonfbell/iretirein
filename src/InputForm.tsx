@@ -1,4 +1,5 @@
 import {
+  Box,
   Link,
   Table,
   TableBody,
@@ -74,23 +75,28 @@ function DecimalInput({ value, onChange, decimals = 2 }: DecimalInputProps) {
 export function InputForm({ state, setState }: Props) {
   return (
     <>
-      <Typography variant="h1">Retirement Calculator</Typography>
-      <Typography sx={{ marginBottom: 3 }}>
-        Save your data by copying the URL and sharing it with others. You can
-        bookmark this page to save your data.
-      </Typography>
-      <Typography variant="h2">Your Ages</Typography>
-      <Table sx={{ marginBottom: 3 }}>
+      <Box padding={2}>
+        <Typography variant="h1" marginBottom={2}>
+          Retirement Calculator
+        </Typography>
+        <Typography>
+          Save your data by copying the URL and sharing it with others. You can
+          bookmark this page to save your data.
+        </Typography>
+      </Box>
+      <Table sx={{ marginBottom: 2 }}>
         <TableHead>
           <TableRow>
-            <TableCell>Names</TableCell>
+            <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+              Names
+            </TableCell>
             <TableCell>Birth Date</TableCell>
             <TableCell>Current Age</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell>
+            <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
               <TextField
                 size="small"
                 value={state.person1Name}
@@ -114,7 +120,7 @@ export function InputForm({ state, setState }: Props) {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>
+            <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
               <TextField
                 size="small"
                 value={state.person2Name}
@@ -139,20 +145,19 @@ export function InputForm({ state, setState }: Props) {
           </TableRow>
         </TableBody>
       </Table>
-      <Typography variant="h2">Take Home Pay</Typography>
 
-      <Typography>
-        This is the amount of money you take home after taxes and deductions
-        that you wish to continue spending during retirement to maintain your
-        current lifestyle. You can exclude money that you additionaly put into
-        savings since you will no longer do that during retirement.
-      </Typography>
+      <Box padding={2}>
+        <Typography variant="h2" marginBottom={2}>
+          Take Home Pay
+        </Typography>
+        <Typography>
+          This is the amount of money you take home after taxes and deductions
+          that you wish to continue spending during retirement to maintain your
+          current lifestyle. You can exclude money that you additionaly put into
+          savings since you will no longer do that during retirement.
+        </Typography>
+      </Box>
       <Table sx={{ marginBottom: 3 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Annual Take Home Pay</TableCell>
-          </TableRow>
-        </TableHead>
         <TableBody>
           <TableRow>
             <TableCell>
@@ -171,29 +176,36 @@ export function InputForm({ state, setState }: Props) {
         </TableBody>
       </Table>
 
-      <Typography variant="h2">Social Security Benefits</Typography>
-      <Typography>
-        Get your Personalized Monthly Retirement Benefit Estimates by signing in
-        at{" "}
-        <Link href="https://www.ssa.gov/myaccount/statement.html" target="ssa">
-          https://www.ssa.gov/myaccount/statement.html
-        </Link>{" "}
-        and find it on page 1 of your statement PDF.
-      </Typography>
+      <Box padding={2}>
+        <Typography variant="h2">Social Security Benefits</Typography>
+        <Typography>
+          Get your Personalized Monthly Retirement Benefit Estimates by signing
+          in at{" "}
+          <Link
+            href="https://www.ssa.gov/myaccount/statement.html"
+            target="ssa"
+          >
+            https://www.ssa.gov/myaccount/statement.html
+          </Link>{" "}
+          and find it on page 1 of your statement PDF.
+        </Typography>
+      </Box>
       <Table sx={{ marginBottom: 3 }}>
         <TableHead>
           <TableRow>
-            <TableCell>Start Age</TableCell>
+            <TableCell>Age</TableCell>
             <TableCell>{state.person1Name}</TableCell>
             <TableCell>{state.person2Name}</TableCell>
-            <TableCell>Total</TableCell>
+            <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+              Total
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {Array.from(Array(9).keys()).map((_, index) => {
             return (
               <TableRow key={index}>
-                <TableCell>Age {62 + index}</TableCell>
+                <TableCell>{62 + index}</TableCell>
                 <TableCell>
                   <MoneyInput
                     value={state.person1SocialSecurity[index]}
@@ -220,7 +232,7 @@ export function InputForm({ state, setState }: Props) {
                     decimals={0}
                   />
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
                   {toMoney(
                     toDecimal(state.person1SocialSecurity[index]) +
                       toDecimal(state.person2SocialSecurity[index])
@@ -232,7 +244,9 @@ export function InputForm({ state, setState }: Props) {
         </TableBody>
       </Table>
 
-      <Typography variant="h2">Your Retirement Buckets</Typography>
+      <Box padding={2}>
+        <Typography variant="h2">Your Retirement Buckets</Typography>
+      </Box>
       <Table sx={{ marginBottom: 3 }}>
         <TableHead>
           <TableRow>
@@ -243,7 +257,7 @@ export function InputForm({ state, setState }: Props) {
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell>Roth IRA, Roth 401k, and HSA</TableCell>
+            <TableCell>Roth&nbsp;&&nbsp;HSA</TableCell>
             <TableCell>
               <MoneyInput
                 value={state.bucket1Value}
@@ -269,7 +283,7 @@ export function InputForm({ state, setState }: Props) {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Traditional IRA and Traditional 401k</TableCell>
+            <TableCell>Traditional</TableCell>
             <TableCell>
               <MoneyInput
                 value={state.bucket2Value}
@@ -294,7 +308,7 @@ export function InputForm({ state, setState }: Props) {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Regular Investment Savings</TableCell>
+            <TableCell>After Tax</TableCell>
             <TableCell>
               <MoneyInput
                 value={state.bucket3Value}
@@ -343,7 +357,9 @@ export function InputForm({ state, setState }: Props) {
         </TableBody>
       </Table>
 
-      <Typography variant="h2">Other Settings</Typography>
+      <Box padding={2}>
+        <Typography variant="h2">Other Settings</Typography>
+      </Box>
       <Table sx={{ marginBottom: 3 }}>
         <TableBody>
           <TableRow>
