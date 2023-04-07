@@ -177,7 +177,9 @@ export function InputForm({ state, setState }: Props) {
       </Table>
 
       <Box padding={2}>
-        <Typography variant="h2">Social Security Benefits</Typography>
+        <Typography variant="h2" marginBottom={2}>
+          Social Security Benefits
+        </Typography>
         <Typography>
           Get your Personalized Monthly Retirement Benefit Estimates by signing
           in at{" "}

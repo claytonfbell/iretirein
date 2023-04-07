@@ -1,4 +1,4 @@
-import { Box, Container, CssBaseline } from "@mui/material"
+import { Box, Container, CssBaseline, useTheme } from "@mui/material"
 import LZUTF8 from "lzutf8"
 import moment from "moment"
 import Head from "next/head"
@@ -52,6 +52,8 @@ export default function Home() {
     setLoaded(true)
   }, [])
 
+  const theme = useTheme()
+
   return (
     <Providers>
       <Head>
@@ -61,6 +63,16 @@ export default function Home() {
         <link rel="icon" href="/favicon-32x32.png" />
       </Head>
       <CssBaseline />
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: 16,
+          backgroundColor: theme.palette.primary.main,
+        }}
+      />
       <Container sx={{ marginTop: 3, paddingLeft: 0, paddingRight: 0 }}>
         {/* <pre>{debug}</pre> */}
         {/* <pre>{JSON.stringify(state, null, 2)}</pre> */}

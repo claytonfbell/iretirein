@@ -9,19 +9,22 @@ const queryClient = new QueryClient()
 
 export function Providers(props: Props) {
   const theme = createTheme({
+    palette: {
+      mode: "dark",
+    },
     typography: {
       fontSize: 16,
       h1: {
-        fontSize: "2.5rem",
-      },
-      h2: {
         fontSize: "2rem",
       },
-      h3: {
+      h2: {
         fontSize: "1.5rem",
       },
+      h3: {
+        fontSize: "1rem",
+      },
       h4: {
-        fontSize: "1.25rem",
+        fontSize: ".75rem",
       },
     },
   })

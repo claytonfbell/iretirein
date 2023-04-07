@@ -114,23 +114,23 @@ function YourNumber({ numbers, state }: YourNumberProps) {
   return (
     <>
       <Box padding={2}>
-        <Typography variant="h2" sx={{ marginBottom: 2 }}>
+        <Typography variant="h1" sx={{ marginBottom: 2 }}>
           {numbers.year} is your year to be financially independent!
         </Typography>
-        <Typography variant="h3" sx={{ marginBottom: 2 }}>
+        <Typography variant="h2" sx={{ marginBottom: 2 }}>
           That is {moment().add(numbers.month, "months").fromNow()}, and you
           will be {numbers.person1Age} and {numbers.person2Age} years old.
         </Typography>
-        <Typography variant="h3" sx={{ marginBottom: 2 }}>
+        <Typography variant="h2" sx={{ marginBottom: 2 }}>
           Your portfolio will may be worth {toMoney(numbers.cumulativeValue, 0)}
           .
         </Typography>
 
-        <Typography variant="h3" sx={{ marginBottom: 2 }}>
+        <Typography variant="h2" sx={{ marginBottom: 2 }}>
           Assumes an effective tax rate of{" "}
           {mathjs.multiply(toDecimal(state.effectiveTaxRate), 100)}%.
         </Typography>
-        <Typography variant="h3" sx={{ marginBottom: 2 }}>
+        <Typography variant="h2" sx={{ marginBottom: 2 }}>
           Safe withdrawal rate starting at{" "}
           {mathjs.round(
             mathjs.multiply(toDecimal(state.withdrawalRate), 100),
