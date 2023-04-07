@@ -186,6 +186,7 @@ export function InputForm({ state, setState }: Props) {
             <TableCell>Start Age</TableCell>
             <TableCell>{state.person1Name}</TableCell>
             <TableCell>{state.person2Name}</TableCell>
+            <TableCell>Total</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -218,6 +219,12 @@ export function InputForm({ state, setState }: Props) {
                     }}
                     decimals={0}
                   />
+                </TableCell>
+                <TableCell>
+                  {toMoney(
+                    toDecimal(state.person1SocialSecurity[index]) +
+                      toDecimal(state.person2SocialSecurity[index])
+                  )}
                 </TableCell>
               </TableRow>
             )

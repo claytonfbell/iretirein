@@ -142,6 +142,7 @@ function YourNumber({ numbers, state }: YourNumberProps) {
           <TableRow>
             <TableCell>Months</TableCell>
             <TableCell>Date</TableCell>
+            <TableCell>Ages</TableCell>
             <TableCell>Stock Price</TableCell>
             <TableCell>Contribute / Sold</TableCell>
             <TableCell>Dividends</TableCell>
@@ -160,6 +161,15 @@ function YourNumber({ numbers, state }: YourNumberProps) {
                   <TableCell>{row.month}</TableCell>
                   <TableCell>
                     {moment().add(row.month, "months").format("MMMM, YYYY")}
+                  </TableCell>
+                  <TableCell>
+                    {moment()
+                      .add(row.month, "months")
+                      .diff(moment(state.person1Birthday), "years")}
+                    /
+                    {moment()
+                      .add(row.month, "months")
+                      .diff(moment(state.person2Birthday), "years")}
                   </TableCell>
                   <TableCell>{toMoney(row.endingPrice, 0)}</TableCell>
                   <TableCell
