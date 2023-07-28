@@ -118,12 +118,12 @@ function YourNumber({ numbers, state }: YourNumberProps) {
           {numbers.year} is your year to be financially independent!
         </Typography>
         <Typography variant="h2" sx={{ marginBottom: 2 }}>
-          That is {moment().add(numbers.month, "months").fromNow()}, and you
-          will be {numbers.person1Age} and {numbers.person2Age} years old.
+          That is {moment().add(numbers.month, "months").fromNow()} (or{" "}
+          {numbers.month} months), and you will be {numbers.person1Age} and{" "}
+          {numbers.person2Age} years old.
         </Typography>
         <Typography variant="h2" sx={{ marginBottom: 2 }}>
-          Your portfolio will may be worth {toMoney(numbers.cumulativeValue, 0)}
-          .
+          Your portfolio may be worth {toMoney(numbers.cumulativeValue, 0)}.
         </Typography>
 
         <Typography variant="h2" sx={{ marginBottom: 2 }}>
