@@ -1,6 +1,7 @@
 import {
   Box,
   Link,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -11,7 +12,7 @@ import {
 } from "@mui/material"
 import { all, create } from "mathjs"
 import moment from "moment"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { InputState } from "../src/InputState"
 import { toDecimal, toMoney } from "./Calculate"
 
@@ -51,24 +52,47 @@ interface DecimalInputProps {
   value: string
   onChange: (newValue: string) => void
   decimals?: number
+  percentage: boolean
 }
 
-function DecimalInput({ value, onChange, decimals = 2 }: DecimalInputProps) {
+function DecimalInput({
+  value,
+  onChange,
+  decimals = 2,
+  percentage = false,
+}: DecimalInputProps) {
+  const [inputValue, setInputValue] = useState(
+    mathjs.multiply(toDecimal(value), 100).toString()
+  )
+
   return (
-    <TextField
-      size="small"
-      value={value}
-      onChange={(e) => {
-        let parts = e.target.value.split(".")
-        if (parts.length > 2) {
-          onChange(parts.slice(0, 2).join("."))
-        }
-        onChange(e.target.value)
-      }}
-      onBlur={(e) => {
-        onChange(toDecimal(value).toFixed(decimals))
-      }}
-    />
+    <Stack direction="row" spacing={1}>
+      <TextField
+        size="small"
+        value={inputValue}
+        onChange={(e) => {
+          let newValue = e.target.value
+
+          // internal state
+          let parts = newValue.split(".")
+          if (parts.length > 2) {
+            setInputValue(parts.slice(0, 2).join("."))
+          } else {
+            setInputValue(newValue)
+          }
+
+          // external state
+          if (percentage) {
+            newValue = `${mathjs.divide(toDecimal(newValue), 100)}`
+          }
+          onChange(toDecimal(newValue).toFixed(decimals))
+        }}
+        InputProps={{
+          endAdornment: percentage ? "%" : undefined,
+        }}
+      />
+      {/* <pre>{JSON.stringify({ value, inputValue }, null, 2)}</pre> */}
+    </Stack>
   )
 }
 
@@ -391,6 +415,7 @@ export function InputForm({ state, setState }: Props) {
                   })
                 }}
                 decimals={4}
+                percentage
               />
             </TableCell>
           </TableRow>
@@ -406,6 +431,7 @@ export function InputForm({ state, setState }: Props) {
                   })
                 }}
                 decimals={5}
+                percentage
               />
             </TableCell>
           </TableRow>
@@ -421,6 +447,7 @@ export function InputForm({ state, setState }: Props) {
                   })
                 }}
                 decimals={5}
+                percentage
               />
             </TableCell>
           </TableRow>
@@ -436,6 +463,7 @@ export function InputForm({ state, setState }: Props) {
                   })
                 }}
                 decimals={5}
+                percentage
               />
             </TableCell>
           </TableRow>
@@ -451,6 +479,7 @@ export function InputForm({ state, setState }: Props) {
                   })
                 }}
                 decimals={5}
+                percentage
               />
             </TableCell>
           </TableRow>
