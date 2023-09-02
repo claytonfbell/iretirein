@@ -31,6 +31,14 @@ export default function Home() {
     withdrawalRate: "0.04",
   })
 
+  const [debounceState, setDebounceState] = useState<InputState>(state)
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebounceState(state)
+    }, 1000)
+    return () => clearTimeout(timeout)
+  }, [state])
+
   const [loaded, setLoaded] = useState(false)
   useEffect(() => {
     if (loaded) {
@@ -78,7 +86,7 @@ export default function Home() {
         {/* <pre>{JSON.stringify(state, null, 2)}</pre> */}
         <InputForm state={state} setState={setState} />
         <Box sx={{ marginTop: 6 }}>
-          <Calculate state={state} />
+          <Calculate state={debounceState} />
         </Box>
       </Container>
     </Providers>

@@ -23,6 +23,7 @@
     "eslint-config-next": "13.1.1",
     "lzutf8": "^0.6.3",
     "mathjs": "^11.5.0",
+    "million": "^2.6.0-beta.12",
     "moment": "^2.29.4",
     "next": "13.1.1",
     "react": "18.2.0",

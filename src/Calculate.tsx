@@ -161,47 +161,41 @@ function YourNumber({ numbers, state }: YourNumberProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {schedule !== undefined ? (
-            <>
-              {schedule.all.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    {moment().add(row.month, "months").format("M/YYYY")}
-                  </TableCell>
-                  <TableCell>
-                    {moment()
-                      .add(row.month, "months")
-                      .diff(moment(state.person1Birthday), "years")}
-                    /
-                    {moment()
-                      .add(row.month, "months")
-                      .diff(moment(state.person2Birthday), "years")}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: row.contribution > 0 ? "green" : "red",
-                    }}
-                  >
-                    {toMoney(row.contribution, 0)}
-                  </TableCell>
-                  <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
-                    {toMoney(row.dividendAmount, 0)}
-                  </TableCell>
-                  <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
-                    {row.ssIncome !== undefined
-                      ? toMoney(row.ssIncome, 0)
-                      : null}
-                  </TableCell>
-                  <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
-                    {row.healthInsuranceGap !== undefined
-                      ? toMoney(row.healthInsuranceGap, 0)
-                      : null}
-                  </TableCell>
-                  <TableCell>{toMoney(row.cumulativeValue, 0)}</TableCell>
-                </TableRow>
-              ))}
-            </>
-          ) : null}
+          {(schedule?.all || []).map((row, index) => (
+            <TableRow key={index}>
+              <TableCell>
+                {moment().add(row.month, "months").format("M/YYYY")}
+              </TableCell>
+              <TableCell>
+                {moment()
+                  .add(row.month, "months")
+                  .diff(moment(state.person1Birthday), "years")}
+                /
+                {moment()
+                  .add(row.month, "months")
+                  .diff(moment(state.person2Birthday), "years")}
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: row.contribution > 0 ? "green" : "red",
+                }}
+              >
+                {toMoney(row.contribution, 0)}
+              </TableCell>
+              <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+                {toMoney(row.dividendAmount, 0)}
+              </TableCell>
+              <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+                {row.ssIncome !== undefined ? toMoney(row.ssIncome, 0) : null}
+              </TableCell>
+              <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+                {row.healthInsuranceGap !== undefined
+                  ? toMoney(row.healthInsuranceGap, 0)
+                  : null}
+              </TableCell>
+              <TableCell>{toMoney(row.cumulativeValue, 0)}</TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
       <br />
