@@ -196,7 +196,12 @@ function YourNumber({ numbers, state }: YourNumberProps) {
               </TableCell>
               <TableCell
                 sx={{
-                  color: row.contribution > 0 ? "green" : "red",
+                  color:
+                    row.contribution > 0
+                      ? "green"
+                      : row.contribution < 0
+                      ? "red"
+                      : "inherit",
                 }}
               >
                 {toMoney(row.contribution, 0)}
