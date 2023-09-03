@@ -29,13 +29,14 @@ export default function Home() {
     inflationRate: "0.038",
     effectiveTaxRate: "0.15",
     withdrawalRate: "0.04",
+    coastFire: false,
   })
 
   const [debounceState, setDebounceState] = useState<InputState>(state)
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebounceState(state)
-    }, 1000)
+    }, 500)
     return () => clearTimeout(timeout)
   }, [state])
 

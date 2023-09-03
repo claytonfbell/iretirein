@@ -18,4 +18,5 @@ export interface InputState {
   inflationRate: string
   effectiveTaxRate: string
   withdrawalRate: string
+  coastFire: boolean
 }

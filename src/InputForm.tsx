@@ -1,5 +1,7 @@
 import {
   Box,
+  Checkbox,
+  FormControlLabel,
   Link,
   Stack,
   Table,
@@ -27,13 +29,20 @@ interface MoneyInputProps {
   value: string
   onChange: (newValue: string) => void
   decimals?: number
+  disabled?: boolean
 }
 
-function MoneyInput({ value, onChange, decimals = 2 }: MoneyInputProps) {
+function MoneyInput({
+  value,
+  onChange,
+  decimals = 2,
+  disabled,
+}: MoneyInputProps) {
   return (
     <TextField
       size="small"
       value={value}
+      disabled={disabled}
       onChange={(e) => {
         let parts = e.target.value.split(".")
         if (parts.length > 2) {
@@ -284,7 +293,22 @@ export function InputForm({ state, setState }: Props) {
           <TableRow>
             <TableCell></TableCell>
             <TableCell>Current Value</TableCell>
-            <TableCell>Monthly Contribution</TableCell>
+            <TableCell>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={!state.coastFire}
+                    onChange={() =>
+                      setState((prev) => ({
+                        ...prev,
+                        coastFire: !prev.coastFire,
+                      }))
+                    }
+                  />
+                }
+                label="Monthly Contributions"
+              />
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -305,6 +329,7 @@ export function InputForm({ state, setState }: Props) {
             <TableCell>
               <MoneyInput
                 value={state.bucket1Contribution}
+                disabled={state.coastFire}
                 onChange={(bucket1Contribution) => {
                   setState({
                     ...state,
@@ -330,6 +355,7 @@ export function InputForm({ state, setState }: Props) {
             <TableCell>
               <MoneyInput
                 value={state.bucket2Contribution}
+                disabled={state.coastFire}
                 onChange={(bucket2Contribution) => {
                   setState({
                     ...state,
@@ -355,6 +381,7 @@ export function InputForm({ state, setState }: Props) {
             <TableCell>
               <MoneyInput
                 value={state.bucket3Contribution}
+                disabled={state.coastFire}
                 onChange={(bucket3Contribution) => {
                   setState({
                     ...state,
