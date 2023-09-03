@@ -1,6 +1,5 @@
 import { Box, Container, CssBaseline, useTheme } from "@mui/material"
 import LZUTF8 from "lzutf8"
-import moment from "moment"
 import Head from "next/head"
 import { useEffect, useState } from "react"
 import { Calculate } from "../src/Calculate"
@@ -12,20 +11,20 @@ export default function Home() {
   const [state, setState] = useState<InputState>({
     person1Name: "Person 1",
     person2Name: "Person 2",
-    person1Birthday: moment("1978-09-22 00:00:00").toISOString(),
-    person2Birthday: moment("1976-06-29 00:00:00").toISOString(),
+    person1Birthday: "1990-01-01",
+    person2Birthday: "1992-01-01",
     person1SocialSecurity: ["0", "0", "0", "0", "0", "0", "0", "0", "0"],
     person2SocialSecurity: ["0", "0", "0", "0", "0", "0", "0", "0", "0"],
-    bucket1Value: "0",
+    bucket1Value: "$270",
     bucket1Contribution: "0",
     bucket2Value: "0",
-    bucket2Contribution: "0",
+    bucket2Contribution: "$1,100",
     bucket3Value: "0",
     bucket3Contribution: "0",
-    takeHomePay: "80000",
+    takeHomePay: "$80,000",
     stockAppreciation: "0.09",
-    stockDividendRate: ".0133",
-    stockPrice: "133",
+    stockDividendRate: ".0148",
+    stockPrice: "$157.00",
     inflationRate: "0.038",
     effectiveTaxRate: "0.15",
     withdrawalRate: "0.04",
