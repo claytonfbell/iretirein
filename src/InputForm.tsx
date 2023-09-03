@@ -12,7 +12,7 @@ import {
 } from "@mui/material"
 import { all, create } from "mathjs"
 import moment from "moment"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { InputState } from "../src/InputState"
 import { toDecimal, toMoney } from "./Calculate"
 
@@ -64,6 +64,12 @@ function DecimalInput({
   const [inputValue, setInputValue] = useState(
     mathjs.multiply(toDecimal(value), 100).toString()
   )
+  useEffect(() => {
+    const newValue = mathjs.multiply(toDecimal(value), 100).toString()
+    if (mathjs.compare(newValue, inputValue) !== 0) {
+      setInputValue(newValue)
+    }
+  }, [value])
 
   return (
     <Stack direction="row" spacing={1}>
