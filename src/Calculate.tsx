@@ -1,15 +1,24 @@
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
 import {
+  AppBar,
   Box,
+  Collapse,
+  Container,
+  IconButton,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material"
 import { all, create } from "mathjs"
 import moment from "moment"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { useQuery } from "react-query"
 import { InputState } from "./InputState"
 
@@ -130,35 +139,70 @@ interface YourNumberProps {
 function YourNumber({ numbers, state }: YourNumberProps) {
   const { data: schedule } = useBuildSchedule({ numbers, state })
 
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
+  const [expanded, setExpanded] = useState(!isMobile)
   return (
     <>
-      <Box padding={2}>
-        <Typography variant="h1" sx={{ marginBottom: 2 }}>
-          {numbers.year} is your year to be financially independent!
-        </Typography>
-        <Typography variant="h2" sx={{ marginBottom: 2 }}>
-          That is {moment().add(numbers.month, "months").fromNow()} (or{" "}
-          {numbers.month} months), and you will be {numbers.person1Age} and{" "}
-          {numbers.person2Age} years old.
-        </Typography>
-        <Typography variant="h2" sx={{ marginBottom: 2 }}>
-          Your portfolio may be worth {toMoney(numbers.cumulativeValue, 0)}.
-        </Typography>
-
-        <Typography variant="h2" sx={{ marginBottom: 2 }}>
-          Assumes an effective tax rate of{" "}
-          {mathjs.multiply(toDecimal(state.effectiveTaxRate), 100)}%.
-        </Typography>
-        <Typography variant="h2" sx={{ marginBottom: 2 }}>
-          Safe withdrawal rate starting at{" "}
-          {mathjs.round(
-            mathjs.multiply(toDecimal(state.withdrawalRate), 100),
-            2
-          )}
-          % and rising annually with inflation rate of{" "}
-          {mathjs.multiply(toDecimal(state.inflationRate), 100)}%.
-        </Typography>
-      </Box>
+      <AppBar
+        variant="outlined"
+        position="fixed"
+        color="primary"
+        sx={{ top: "auto", bottom: 0 }}
+      >
+        <Box
+          paddingTop={1}
+          paddingBottom={1}
+          sx={{ backgroundColor: theme.palette.primary.dark }}
+        >
+          <Container>
+            <Stack spacing={1}>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography component="div" variant="h1">
+                  {numbers.year} is your year to be financially independent!
+                </Typography>
+                <Box>
+                  <IconButton onClick={() => setExpanded(!expanded)}>
+                    {expanded ? (
+                      <KeyboardArrowDownIcon />
+                    ) : (
+                      <KeyboardArrowRightIcon />
+                    )}
+                  </IconButton>
+                </Box>
+              </Stack>
+              <Collapse in={expanded} timeout={200}>
+                <Typography variant="h2" sx={{ marginBottom: 2 }}>
+                  That is {moment().add(numbers.month, "months").fromNow()} (or{" "}
+                  {numbers.month} months), and you will be {numbers.person1Age}{" "}
+                  and {numbers.person2Age} years old.
+                </Typography>
+                <Typography variant="h2" sx={{ marginBottom: 2 }}>
+                  Your portfolio may be worth{" "}
+                  {toMoney(numbers.cumulativeValue, 0)}.
+                </Typography>
+                <Typography variant="h2" sx={{ marginBottom: 2 }}>
+                  Assumes an effective tax rate of{" "}
+                  {mathjs.multiply(toDecimal(state.effectiveTaxRate), 100)}%.
+                </Typography>
+                <Typography variant="h2" sx={{ marginBottom: 2 }}>
+                  Safe withdrawal rate starting at{" "}
+                  {mathjs.round(
+                    mathjs.multiply(toDecimal(state.withdrawalRate), 100),
+                    2
+                  )}
+                  % and rising annually with inflation rate of{" "}
+                  {mathjs.multiply(toDecimal(state.inflationRate), 100)}%.
+                </Typography>
+              </Collapse>
+            </Stack>
+          </Container>
+        </Box>
+      </AppBar>
 
       <br />
       <Table size="small" stickyHeader>
@@ -225,6 +269,7 @@ function YourNumber({ numbers, state }: YourNumberProps) {
       <br />
       <br />
       <br />
+      <Box sx={{ height: 400 }}>&nbsp;</Box>
       {/* <pre>{JSON.stringify({ schedule }, null, 2)}</pre> */}
     </>
   )

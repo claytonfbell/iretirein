@@ -119,8 +119,8 @@ export function InputForm({ state, setState }: Props) {
           Retirement Calculator
         </Typography>
         <Typography>
-          Save your data by copying the URL and sharing it with others. You can
-          bookmark this page to save your data.
+          Save your data by copying the URL which contains your data encoded.
+          You can bookmark this page to save your data.
         </Typography>
       </Box>
       <Table sx={{ marginBottom: 2 }}>
@@ -405,11 +405,13 @@ export function InputForm({ state, setState }: Props) {
             </TableCell>
             <TableCell>
               {toMoney(
-                mathjs
-                  .chain(toDecimal(state.bucket1Contribution))
-                  .add(toDecimal(state.bucket2Contribution))
-                  .add(toDecimal(state.bucket3Contribution))
-                  .done()
+                state.coastFire === true
+                  ? 0
+                  : mathjs
+                      .chain(toDecimal(state.bucket1Contribution))
+                      .add(toDecimal(state.bucket2Contribution))
+                      .add(toDecimal(state.bucket3Contribution))
+                      .done()
               )}
             </TableCell>
           </TableRow>
