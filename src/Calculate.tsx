@@ -142,6 +142,21 @@ function YourNumber({ numbers, state }: YourNumberProps) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [expanded, setExpanded] = useState(!isMobile)
+
+  // get duration in two units
+  const fromNowString = useMemo(() => {
+    const when = moment().add(numbers.month, "months")
+    const duration = moment.duration(when.diff(moment()))
+    const years = Math.floor(duration.asYears())
+    const months = Math.floor(duration.asMonths() - years * 12)
+    const monthsString = months === 1 ? `${months} month` : `${months} months`
+    const yearsString =
+      years === 0 ? null : years === 1 ? `${years} year` : `${years} years`
+    return `in ${[yearsString, monthsString]
+      .filter((x) => x !== null)
+      .join(" and ")}`
+  }, [numbers.month])
+
   return (
     <>
       <AppBar
@@ -177,8 +192,7 @@ function YourNumber({ numbers, state }: YourNumberProps) {
               </Stack>
               <Collapse in={expanded} timeout={200}>
                 <Typography variant="h2" sx={{ marginBottom: 2 }}>
-                  That is {moment().add(numbers.month, "months").fromNow()} (or{" "}
-                  {numbers.month} months), and you will be {numbers.person1Age}{" "}
+                  That is {fromNowString}, and you will be {numbers.person1Age}{" "}
                   and {numbers.person2Age} years old.
                 </Typography>
                 <Typography variant="h2" sx={{ marginBottom: 2 }}>
