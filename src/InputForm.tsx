@@ -1,7 +1,9 @@
+import ClearIcon from "@mui/icons-material/Clear"
 import {
   Box,
   Checkbox,
   FormControlLabel,
+  IconButton,
   Link,
   Stack,
   Table,
@@ -14,7 +16,7 @@ import {
 } from "@mui/material"
 import { all, create } from "mathjs"
 import moment from "moment"
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { InputState } from "../src/InputState"
 import { toDecimal, toMoney } from "./Calculate"
 
@@ -30,6 +32,7 @@ interface MoneyInputProps {
   onChange: (newValue: string) => void
   decimals?: number
   disabled?: boolean
+  minWidth?: number
 }
 
 function MoneyInput({
@@ -37,7 +40,9 @@ function MoneyInput({
   onChange,
   decimals = 2,
   disabled,
+  minWidth,
 }: MoneyInputProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
   return (
     <TextField
       size="small"
@@ -52,6 +57,32 @@ function MoneyInput({
       }}
       onBlur={(e) => {
         onChange(toMoney(toDecimal(value), decimals))
+      }}
+      sx={{
+        minWidth,
+        "& .clear-button": {
+          display: "none",
+        },
+        "&:hover .clear-button": {
+          display: "block",
+        },
+      }}
+      inputRef={inputRef}
+      InputProps={{
+        endAdornment:
+          value.length > 0 ? (
+            <IconButton
+              className="clear-button"
+              sx={{ opacity: 0.4, right: 4, top: 4, position: "absolute" }}
+              size="small"
+              onClick={() => {
+                onChange("")
+                inputRef.current?.focus()
+              }}
+            >
+              <ClearIcon fontSize="small" />
+            </IconButton>
+          ) : null,
       }}
     />
   )
@@ -306,7 +337,11 @@ export function InputForm({ state, setState }: Props) {
                     }
                   />
                 }
-                label="Monthly Contributions"
+                label={
+                  <Typography fontSize="inherit">
+                    Monthly Contributions
+                  </Typography>
+                }
               />
             </TableCell>
           </TableRow>
@@ -316,6 +351,7 @@ export function InputForm({ state, setState }: Props) {
             <TableCell>Roth&nbsp;&&nbsp;HSA</TableCell>
             <TableCell>
               <MoneyInput
+                minWidth={156}
                 value={state.bucket1Value}
                 onChange={(bucket1Value) => {
                   setState({
@@ -343,6 +379,7 @@ export function InputForm({ state, setState }: Props) {
             <TableCell>Traditional</TableCell>
             <TableCell>
               <MoneyInput
+                minWidth={156}
                 value={state.bucket2Value}
                 onChange={(bucket2Value) => {
                   setState({
@@ -369,6 +406,7 @@ export function InputForm({ state, setState }: Props) {
             <TableCell>After Tax</TableCell>
             <TableCell>
               <MoneyInput
+                minWidth={156}
                 value={state.bucket3Value}
                 onChange={(bucket3Value) => {
                   setState({
