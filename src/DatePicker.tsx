@@ -1,8 +1,8 @@
-import { TextField } from "@mui/material"
-import { LocalizationProvider } from "@mui/x-date-pickers"
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
-import { DatePicker as MUIDatePicker } from "@mui/x-date-pickers/DatePicker"
-import moment from "moment"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import { DatePicker as MuiDatePicker } from "@mui/x-date-pickers/DatePicker"
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
+import dayjs from "dayjs"
+
 interface Props {
   value: string | null
   onChange: (newValue: string | null) => void
@@ -10,16 +10,16 @@ interface Props {
 
 export function DatePicker({ value, onChange }: Props) {
   return (
-    <>
-      <LocalizationProvider dateAdapter={AdapterMoment}>
-        <MUIDatePicker
-          value={moment(value)}
-          onChange={(newValue) => {
-            onChange(newValue?.toISOString() ?? null)
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </LocalizationProvider>
-    </>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <MuiDatePicker
+        slotProps={{
+          textField: { size: "small" },
+        }}
+        value={dayjs(value)}
+        onChange={(newDate) => {
+          onChange(newDate?.toISOString() ?? null)
+        }}
+      />
+    </LocalizationProvider>
   )
 }

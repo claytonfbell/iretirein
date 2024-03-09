@@ -1,6 +1,8 @@
 import ClearIcon from "@mui/icons-material/Clear"
+import IosShareIcon from "@mui/icons-material/IosShare"
 import {
   Box,
+  Button,
   Checkbox,
   FormControlLabel,
   IconButton,
@@ -19,6 +21,7 @@ import moment from "moment"
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { InputState } from "../src/InputState"
 import { toDecimal, toMoney } from "./Calculate"
+import { DatePicker } from "./DatePicker"
 
 const mathjs = create(all, {})
 
@@ -33,6 +36,7 @@ interface MoneyInputProps {
   decimals?: number
   disabled?: boolean
   minWidth?: number
+  label?: string
 }
 
 function MoneyInput({
@@ -41,10 +45,12 @@ function MoneyInput({
   decimals = 2,
   disabled,
   minWidth,
+  label,
 }: MoneyInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   return (
     <TextField
+      label={label}
       size="small"
       value={value}
       disabled={disabled}
@@ -68,6 +74,9 @@ function MoneyInput({
         },
       }}
       inputRef={inputRef}
+      inputProps={{
+        sx: { textAlign: "right", paddingRight: 3 },
+      }}
       InputProps={{
         endAdornment:
           value.length > 0 ? (
@@ -143,16 +152,38 @@ function DecimalInput({
 }
 
 export function InputForm({ state, setState }: Props) {
+  function handleShareClick() {
+    navigator.share({
+      title: "Retirement Calculator",
+      text: "Retirement Calculator",
+      url: window.location.href,
+    })
+  }
+
+  const browserSupportsShare = !!global.navigator?.share
+
   return (
     <>
       <Box padding={2}>
-        <Typography variant="h1" marginBottom={2}>
-          Retirement Calculator
-        </Typography>
-        <Typography>
-          Save your data by copying the URL which contains your data encoded.
-          You can bookmark this page to save your data.
-        </Typography>
+        <Stack spacing={2}>
+          <Typography variant="h1">Retirement Calculator</Typography>
+          <Typography>
+            Save your data by copying the URL which contains your data encoded.
+            You can bookmark this page to save your data.
+          </Typography>
+          {/* native share button  */}
+          {!browserSupportsShare && (
+            <Stack direction="row">
+              <Button
+                onClick={handleShareClick}
+                variant="contained"
+                startIcon={<IosShareIcon />}
+              >
+                Share
+              </Button>
+            </Stack>
+          )}
+        </Stack>
       </Box>
       <Table sx={{ marginBottom: 2 }}>
         <TableHead>
@@ -176,12 +207,10 @@ export function InputForm({ state, setState }: Props) {
               />
             </TableCell>
             <TableCell>
-              <TextField
-                size="small"
-                type="date"
+              <DatePicker
                 value={state.person1Birthday}
-                onChange={(e) => {
-                  setState({ ...state, person1Birthday: e.target.value })
+                onChange={(person1Birthday) => {
+                  setState({ ...state, person1Birthday })
                 }}
               />
             </TableCell>
@@ -200,12 +229,10 @@ export function InputForm({ state, setState }: Props) {
               />
             </TableCell>
             <TableCell>
-              <TextField
-                size="small"
-                type="date"
+              <DatePicker
                 value={state.person2Birthday}
-                onChange={(e) => {
-                  setState({ ...state, person2Birthday: e.target.value })
+                onChange={(person2Birthday) => {
+                  setState({ ...state, person2Birthday })
                 }}
               />
             </TableCell>
@@ -319,10 +346,9 @@ export function InputForm({ state, setState }: Props) {
       <Box padding={2}>
         <Typography variant="h2">Your Retirement Buckets</Typography>
       </Box>
-      <Table sx={{ marginBottom: 3 }}>
+      <Table sx={{ marginBottom: 3, width: "100%" }}>
         <TableHead>
           <TableRow>
-            <TableCell></TableCell>
             <TableCell>Current Value</TableCell>
             <TableCell>
               <FormControlLabel
@@ -348,10 +374,9 @@ export function InputForm({ state, setState }: Props) {
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell>Roth&nbsp;&&nbsp;HSA</TableCell>
             <TableCell>
               <MoneyInput
-                minWidth={156}
+                label={"Roth & HSA"}
                 value={state.bucket1Value}
                 onChange={(bucket1Value) => {
                   setState({
@@ -364,6 +389,7 @@ export function InputForm({ state, setState }: Props) {
 
             <TableCell>
               <MoneyInput
+                label={"Roth & HSA"}
                 value={state.bucket1Contribution}
                 disabled={state.coastFire}
                 onChange={(bucket1Contribution) => {
@@ -376,10 +402,9 @@ export function InputForm({ state, setState }: Props) {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Traditional</TableCell>
             <TableCell>
               <MoneyInput
-                minWidth={156}
+                label={"Traditional"}
                 value={state.bucket2Value}
                 onChange={(bucket2Value) => {
                   setState({
@@ -391,6 +416,7 @@ export function InputForm({ state, setState }: Props) {
             </TableCell>
             <TableCell>
               <MoneyInput
+                label={"Traditional"}
                 value={state.bucket2Contribution}
                 disabled={state.coastFire}
                 onChange={(bucket2Contribution) => {
@@ -403,10 +429,9 @@ export function InputForm({ state, setState }: Props) {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>After Tax</TableCell>
             <TableCell>
               <MoneyInput
-                minWidth={156}
+                label={"After Tax"}
                 value={state.bucket3Value}
                 onChange={(bucket3Value) => {
                   setState({
@@ -418,6 +443,7 @@ export function InputForm({ state, setState }: Props) {
             </TableCell>
             <TableCell>
               <MoneyInput
+                label={"After Tax"}
                 value={state.bucket3Contribution}
                 disabled={state.coastFire}
                 onChange={(bucket3Contribution) => {
@@ -431,7 +457,6 @@ export function InputForm({ state, setState }: Props) {
           </TableRow>
 
           <TableRow>
-            <TableCell>Totals</TableCell>
             <TableCell>
               {toMoney(
                 mathjs

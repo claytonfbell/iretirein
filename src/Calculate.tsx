@@ -213,7 +213,11 @@ function YourNumber({ numbers, state }: YourNumberProps) {
                     % and rising annually with inflation rate of{" "}
                     {mathjs.multiply(toDecimal(state.inflationRate), 100)}%.
                   </Typography>
-                  <Stack direction="row" justifyContent="space-between">
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    maxWidth={400}
+                  >
                     <Stack>
                       <Typography variant="h2">Roth & HSA</Typography>
                       <Typography variant="h2">
