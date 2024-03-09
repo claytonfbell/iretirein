@@ -172,7 +172,7 @@ export function InputForm({ state, setState }: Props) {
             You can bookmark this page to save your data.
           </Typography>
           {/* native share button  */}
-          {!browserSupportsShare && (
+          {browserSupportsShare && (
             <Stack direction="row">
               <Button
                 onClick={handleShareClick}
