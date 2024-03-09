@@ -1,11 +1,9 @@
-import ClearIcon from "@mui/icons-material/Clear"
 import IosShareIcon from "@mui/icons-material/IosShare"
 import {
   Box,
   Button,
   Checkbox,
   FormControlLabel,
-  IconButton,
   Link,
   Stack,
   Table,
@@ -18,137 +16,18 @@ import {
 } from "@mui/material"
 import { all, create } from "mathjs"
 import moment from "moment"
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
-import { InputState } from "../src/InputState"
-import { toDecimal, toMoney } from "./Calculate"
-import { DatePicker } from "./DatePicker"
+import { Dispatch, SetStateAction } from "react"
+import { DatePicker } from "../DatePicker"
+import { InputState } from "../InputState"
+import { toDecimal, toMoney } from "../util"
+import { DecimalInput } from "./DecimalInput"
+import { MoneyInput } from "./MoneyInput"
 
 const mathjs = create(all, {})
 
 interface Props {
   state: InputState
   setState: Dispatch<SetStateAction<InputState>>
-}
-
-interface MoneyInputProps {
-  value: string
-  onChange: (newValue: string) => void
-  decimals?: number
-  disabled?: boolean
-  minWidth?: number
-  label?: string
-}
-
-function MoneyInput({
-  value,
-  onChange,
-  decimals = 2,
-  disabled,
-  minWidth,
-  label,
-}: MoneyInputProps) {
-  const inputRef = useRef<HTMLInputElement>(null)
-  return (
-    <TextField
-      label={label}
-      size="small"
-      value={value}
-      disabled={disabled}
-      onChange={(e) => {
-        let parts = e.target.value.split(".")
-        if (parts.length > 2) {
-          onChange(parts.slice(0, 2).join("."))
-        }
-        onChange(e.target.value)
-      }}
-      onBlur={(e) => {
-        onChange(toMoney(toDecimal(value), decimals))
-      }}
-      sx={{
-        minWidth,
-        "& .clear-button": {
-          display: "none",
-        },
-        "&:hover .clear-button": {
-          display: "block",
-        },
-      }}
-      inputRef={inputRef}
-      inputProps={{
-        sx: { textAlign: "right", paddingRight: 3 },
-      }}
-      InputProps={{
-        endAdornment:
-          value.length > 0 ? (
-            <IconButton
-              className="clear-button"
-              sx={{ opacity: 0.4, right: 4, top: 4, position: "absolute" }}
-              size="small"
-              onClick={() => {
-                onChange("")
-                inputRef.current?.focus()
-              }}
-            >
-              <ClearIcon fontSize="small" />
-            </IconButton>
-          ) : null,
-      }}
-    />
-  )
-}
-
-interface DecimalInputProps {
-  value: string
-  onChange: (newValue: string) => void
-  decimals?: number
-  percentage: boolean
-}
-
-function DecimalInput({
-  value,
-  onChange,
-  decimals = 2,
-  percentage = false,
-}: DecimalInputProps) {
-  const [inputValue, setInputValue] = useState(
-    mathjs.multiply(toDecimal(value), 100).toString()
-  )
-  useEffect(() => {
-    const newValue = mathjs.multiply(toDecimal(value), 100).toString()
-    if (mathjs.compare(newValue, inputValue) !== 0) {
-      setInputValue(newValue)
-    }
-  }, [value])
-
-  return (
-    <Stack direction="row" spacing={1}>
-      <TextField
-        size="small"
-        value={inputValue}
-        onChange={(e) => {
-          let newValue = e.target.value
-
-          // internal state
-          let parts = newValue.split(".")
-          if (parts.length > 2) {
-            setInputValue(parts.slice(0, 2).join("."))
-          } else {
-            setInputValue(newValue)
-          }
-
-          // external state
-          if (percentage) {
-            newValue = `${mathjs.divide(toDecimal(newValue), 100)}`
-          }
-          onChange(toDecimal(newValue).toFixed(decimals))
-        }}
-        InputProps={{
-          endAdornment: percentage ? "%" : undefined,
-        }}
-      />
-      {/* <pre>{JSON.stringify({ value, inputValue }, null, 2)}</pre> */}
-    </Stack>
-  )
 }
 
 export function InputForm({ state, setState }: Props) {
@@ -332,10 +211,29 @@ export function InputForm({ state, setState }: Props) {
                   />
                 </TableCell>
                 <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
-                  {toMoney(
-                    toDecimal(state.person1SocialSecurity[index]) +
-                      toDecimal(state.person2SocialSecurity[index])
-                  )}
+                  <Stack direction="row" spacing={1}>
+                    <Typography>
+                      {toMoney(
+                        toDecimal(state.person1SocialSecurity[index]) +
+                          toDecimal(state.person2SocialSecurity[index]),
+                        0
+                      )}{" "}
+                      mo
+                    </Typography>
+                    <Typography> / </Typography>
+                    {/* anual  */}
+                    <Typography>
+                      {toMoney(
+                        mathjs
+                          .chain(toDecimal(state.person1SocialSecurity[index]))
+                          .add(toDecimal(state.person2SocialSecurity[index]))
+                          .multiply(12)
+                          .done(),
+                        0
+                      )}{" "}
+                      yr
+                    </Typography>
+                  </Stack>
                 </TableCell>
               </TableRow>
             )
