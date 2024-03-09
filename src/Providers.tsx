@@ -1,4 +1,9 @@
-import { createTheme, ThemeProvider } from "@mui/material"
+import {
+  createTheme,
+  ThemeProvider,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"
 import { QueryClient, QueryClientProvider } from "react-query"
 
 interface Props {
@@ -8,23 +13,25 @@ interface Props {
 const queryClient = new QueryClient()
 
 export function Providers(props: Props) {
+  const parentTheme = useTheme()
+  const isMobile = useMediaQuery(parentTheme.breakpoints.down("sm"))
   const theme = createTheme({
     palette: {
       mode: "dark",
     },
     typography: {
-      fontSize: 16,
+      fontSize: 14,
       h1: {
-        fontSize: "2rem",
+        fontSize: "1.8em",
       },
       h2: {
-        fontSize: "1.5rem",
+        fontSize: "1.2em",
       },
       h3: {
-        fontSize: "1rem",
+        fontSize: "1em",
       },
       h4: {
-        fontSize: ".75rem",
+        fontSize: ".75em",
       },
     },
   })

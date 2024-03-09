@@ -191,27 +191,49 @@ function YourNumber({ numbers, state }: YourNumberProps) {
                 </Box>
               </Stack>
               <Collapse in={expanded} timeout={200}>
-                <Typography variant="h2" sx={{ marginBottom: 2 }}>
-                  That is {fromNowString}, and you will be {numbers.person1Age}{" "}
-                  and {numbers.person2Age} years old.
-                </Typography>
-                <Typography variant="h2" sx={{ marginBottom: 2 }}>
-                  Your portfolio may be worth{" "}
-                  {toMoney(numbers.cumulativeValue, 0)}.
-                </Typography>
-                <Typography variant="h2" sx={{ marginBottom: 2 }}>
-                  Assumes an effective tax rate of{" "}
-                  {mathjs.multiply(toDecimal(state.effectiveTaxRate), 100)}%.
-                </Typography>
-                <Typography variant="h2" sx={{ marginBottom: 2 }}>
-                  Safe withdrawal rate starting at{" "}
-                  {mathjs.round(
-                    mathjs.multiply(toDecimal(state.withdrawalRate), 100),
-                    2
-                  )}
-                  % and rising annually with inflation rate of{" "}
-                  {mathjs.multiply(toDecimal(state.inflationRate), 100)}%.
-                </Typography>
+                <Stack spacing={3}>
+                  <Typography variant="h2">
+                    That is {fromNowString}, and you will be{" "}
+                    {numbers.person1Age} and {numbers.person2Age} years old.
+                  </Typography>
+                  <Typography variant="h2">
+                    Your portfolio may be worth{" "}
+                    {toMoney(numbers.cumulativeValue, 0)}.
+                  </Typography>
+                  <Typography variant="h2">
+                    Assumes an effective tax rate of{" "}
+                    {mathjs.multiply(toDecimal(state.effectiveTaxRate), 100)}%.
+                  </Typography>
+                  <Typography variant="h2">
+                    Safe withdrawal rate starting at{" "}
+                    {mathjs.round(
+                      mathjs.multiply(toDecimal(state.withdrawalRate), 100),
+                      2
+                    )}
+                    % and rising annually with inflation rate of{" "}
+                    {mathjs.multiply(toDecimal(state.inflationRate), 100)}%.
+                  </Typography>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Stack>
+                      <Typography variant="h2">Roth & HSA</Typography>
+                      <Typography variant="h2">
+                        {toMoney(numbers.bucket1CumulativeValue, 0)}
+                      </Typography>
+                    </Stack>
+                    <Stack>
+                      <Typography variant="h2">Traditional</Typography>
+                      <Typography variant="h2">
+                        {toMoney(numbers.bucket2CumulativeValue, 0)}
+                      </Typography>
+                    </Stack>
+                    <Stack>
+                      <Typography variant="h2">After Tax</Typography>
+                      <Typography variant="h2">
+                        {toMoney(numbers.bucket3CumulativeValue, 0)}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </Stack>
               </Collapse>
             </Stack>
           </Container>
@@ -541,6 +563,10 @@ function findNumbersForMonth(
     (b3?.cumulativeValue || 0) / cumulativeValue,
   ]
 
+  const bucket1CumulativeValue = b1?.cumulativeValue || 0
+  const bucket2CumulativeValue = b2?.cumulativeValue || 0
+  const bucket3CumulativeValue = b3?.cumulativeValue || 0
+
   const date = moment().add(month, "months").format("MMMM, YYYY")
   const year = moment().add(month, "months").year()
 
@@ -601,6 +627,9 @@ function findNumbersForMonth(
     tax,
     taxableRatio,
     cumulativeValue,
+    bucket1CumulativeValue,
+    bucket2CumulativeValue,
+    bucket3CumulativeValue,
     withdrawal,
     requiredPortfolioValue,
     bucket1,
