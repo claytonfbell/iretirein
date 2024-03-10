@@ -9,6 +9,7 @@ interface Props {
   decimals?: number
   disabled?: boolean
   minWidth?: number
+  width?: number
   label?: string
 }
 
@@ -19,6 +20,7 @@ export function MoneyInput({
   disabled,
   minWidth,
   label,
+  width,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
   return (
@@ -39,6 +41,7 @@ export function MoneyInput({
       }}
       sx={{
         minWidth,
+        width,
         "& .clear-button": {
           display: "none",
         },
