@@ -22,9 +22,8 @@ import moment from "moment"
 import { useMemo, useState } from "react"
 import { InputState } from "../InputState"
 import { toDecimal, toMoney } from "../util"
-import { ProgressBar } from "./ProgressBar"
+import { IncomeProgressBar } from "./IncomeProgressBar"
 import { useBuildSchedule } from "./useBuildSchedule"
-import { useCalculateCurrentProgress } from "./useCalculateCurrentProgress"
 import { YourNumberType } from "./useFindMyYear"
 
 const mathjs = create(all, {})
@@ -54,8 +53,6 @@ export function YourNumber({ numbers, state }: YourNumberProps) {
       .filter((x) => x !== null)
       .join(" and ")}`
   }, [numbers.month])
-
-  const progress = useCalculateCurrentProgress(state)
 
   const when = dayjs().add(numbers.month, "months")
 
@@ -140,7 +137,7 @@ export function YourNumber({ numbers, state }: YourNumberProps) {
                       </Typography>
                     </Stack>
                   </Stack>
-                  <ProgressBar progress={progress} />
+                  <IncomeProgressBar state={state} />
                 </Stack>
               </Collapse>
             </Stack>
