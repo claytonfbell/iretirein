@@ -16,12 +16,15 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material"
+import dayjs from "dayjs"
 import { all, create } from "mathjs"
 import moment from "moment"
 import { useMemo, useState } from "react"
 import { InputState } from "../InputState"
 import { toDecimal, toMoney } from "../util"
+import { ProgressBar } from "./ProgressBar"
 import { useBuildSchedule } from "./useBuildSchedule"
+import { useCalculateCurrentProgress } from "./useCalculateCurrentProgress"
 import { YourNumberType } from "./useFindMyYear"
 
 const mathjs = create(all, {})
@@ -52,6 +55,10 @@ export function YourNumber({ numbers, state }: YourNumberProps) {
       .join(" and ")}`
   }, [numbers.month])
 
+  const progress = useCalculateCurrentProgress(state)
+
+  const when = dayjs().add(numbers.month, "months")
+
   return (
     <>
       <AppBar
@@ -73,7 +80,8 @@ export function YourNumber({ numbers, state }: YourNumberProps) {
                 alignItems="center"
               >
                 <Typography component="div" variant="h1">
-                  {numbers.year} is your year to be financially independent!
+                  {when.format("MMMM YYYY")} is your Financial Independence
+                  Date!
                 </Typography>
                 <Box>
                   <IconButton onClick={() => setExpanded(!expanded)}>
@@ -132,6 +140,7 @@ export function YourNumber({ numbers, state }: YourNumberProps) {
                       </Typography>
                     </Stack>
                   </Stack>
+                  <ProgressBar progress={progress} />
                 </Stack>
               </Collapse>
             </Stack>
