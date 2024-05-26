@@ -1,8 +1,6 @@
 import IosShareIcon from "@mui/icons-material/IosShare"
 import { Box, Button, Stack, Typography } from "@mui/material"
 import { all, create } from "mathjs"
-import { Dispatch, SetStateAction } from "react"
-import { InputState } from "../InputState"
 import { Ages } from "./Ages"
 import { AssetBuckets } from "./AssetBuckets"
 import { IncomeNeeded } from "./IncomeNeeded"
@@ -11,12 +9,7 @@ import { SocialSecurityBenefits } from "./SocialSecurityBenefits"
 
 const mathjs = create(all, {})
 
-interface Props {
-  state: InputState
-  setState: Dispatch<SetStateAction<InputState>>
-}
-
-export function InputForm({ state, setState }: Props) {
+export function InputForm() {
   function handleShareClick() {
     navigator.share({
       title: "Retirement Calculator",
@@ -51,11 +44,11 @@ export function InputForm({ state, setState }: Props) {
         </Stack>
       </Box>
 
-      <Ages state={state} setState={setState} />
-      <IncomeNeeded state={state} setState={setState} />
-      <SocialSecurityBenefits state={state} setState={setState} />
-      <AssetBuckets state={state} setState={setState} />
-      <OtherSettings state={state} setState={setState} />
+      <Ages />
+      <IncomeNeeded />
+      <SocialSecurityBenefits />
+      <AssetBuckets />
+      <OtherSettings />
     </Stack>
   )
 }

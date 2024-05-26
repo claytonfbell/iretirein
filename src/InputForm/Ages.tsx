@@ -7,16 +7,11 @@ import {
   TextField,
 } from "@mui/material"
 import moment from "moment"
-import { Dispatch, SetStateAction } from "react"
 import { DatePicker } from "../DatePicker"
-import { InputState } from "../InputState"
+import { useGlobalState } from "../GlobalStateProvider"
 
-interface Props {
-  state: InputState
-  setState: Dispatch<SetStateAction<InputState>>
-}
-
-export function Ages({ state, setState }: Props) {
+export function Ages() {
+  const { formState, setFormState } = useGlobalState()
   return (
     <>
       <Table sx={{ marginBottom: 2 }}>
@@ -34,44 +29,44 @@ export function Ages({ state, setState }: Props) {
             <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
               <TextField
                 size="small"
-                value={state.person1Name}
+                value={formState.person1Name}
                 onChange={(e) => {
-                  setState({ ...state, person1Name: e.target.value })
+                  setFormState({ ...formState, person1Name: e.target.value })
                 }}
               />
             </TableCell>
             <TableCell>
               <DatePicker
-                value={state.person1Birthday}
+                value={formState.person1Birthday}
                 onChange={(person1Birthday) => {
-                  setState({ ...state, person1Birthday })
+                  setFormState({ ...formState, person1Birthday })
                 }}
               />
             </TableCell>
             <TableCell>
-              {moment().diff(state.person1Birthday, "years")}
+              {moment().diff(formState.person1Birthday, "years")}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
               <TextField
                 size="small"
-                value={state.person2Name}
+                value={formState.person2Name}
                 onChange={(e) => {
-                  setState({ ...state, person2Name: e.target.value })
+                  setFormState({ ...formState, person2Name: e.target.value })
                 }}
               />
             </TableCell>
             <TableCell>
               <DatePicker
-                value={state.person2Birthday}
+                value={formState.person2Birthday}
                 onChange={(person2Birthday) => {
-                  setState({ ...state, person2Birthday })
+                  setFormState({ ...formState, person2Birthday })
                 }}
               />
             </TableCell>
             <TableCell>
-              {moment().diff(state.person2Birthday, "years")}
+              {moment().diff(formState.person2Birthday, "years")}
             </TableCell>
           </TableRow>
         </TableBody>

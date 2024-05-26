@@ -5,6 +5,7 @@ import {
   useTheme,
 } from "@mui/material"
 import { QueryClient, QueryClientProvider } from "react-query"
+import { GlobalStateProvider } from "./GlobalStateProvider"
 
 interface Props {
   children: React.ReactNode
@@ -38,7 +39,7 @@ export function Providers(props: Props) {
   return (
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        {props.children}
+        <GlobalStateProvider>{props.children}</GlobalStateProvider>
       </QueryClientProvider>
     </ThemeProvider>
   )

@@ -11,12 +11,11 @@ export interface InputState {
   bucket2Contribution: string
   bucket3Value: string
   bucket3Contribution: string
-  takeHomePay: string
+  requiredIncome: string
   stockAppreciation: string
   stockDividendRate: string
-  stockPrice: string
   inflationRate: string
-  effectiveTaxRate: string
   withdrawalRate: string
   coastFire: boolean
+  preMedicareInsuance: string
 }

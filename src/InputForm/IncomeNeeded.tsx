@@ -6,16 +6,11 @@ import {
   TableRow,
   Typography,
 } from "@mui/material"
-import { Dispatch, SetStateAction } from "react"
-import { InputState } from "../InputState"
+import { useGlobalState } from "../GlobalStateProvider"
 import { MoneyInput } from "./MoneyInput"
 
-interface Props {
-  state: InputState
-  setState: Dispatch<SetStateAction<InputState>>
-}
-
-export function IncomeNeeded({ state, setState }: Props) {
+export function IncomeNeeded() {
+  const { formState, setFormState } = useGlobalState()
   return (
     <Stack spacing={1}>
       <Typography variant="h2" marginBottom={2}>
@@ -32,11 +27,11 @@ export function IncomeNeeded({ state, setState }: Props) {
           <TableRow>
             <TableCell>
               <MoneyInput
-                value={state.takeHomePay}
+                value={formState.requiredIncome}
                 onChange={(takeHomePay) => {
-                  setState({
-                    ...state,
-                    takeHomePay,
+                  setFormState({
+                    ...formState,
+                    requiredIncome: takeHomePay,
                   })
                 }}
                 decimals={0}

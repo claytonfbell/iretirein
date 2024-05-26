@@ -10,19 +10,14 @@ import {
   Typography,
 } from "@mui/material"
 import { all, create } from "mathjs"
-import { Dispatch, SetStateAction } from "react"
-import { InputState } from "../InputState"
+import { useGlobalState } from "../GlobalStateProvider"
 import { toDecimal, toMoney } from "../util"
 import { MoneyInput } from "./MoneyInput"
 
 const mathjs = create(all, {})
 
-interface Props {
-  state: InputState
-  setState: Dispatch<SetStateAction<InputState>>
-}
-
-export function SocialSecurityBenefits({ state, setState }: Props) {
+export function SocialSecurityBenefits() {
+  const { formState, setFormState } = useGlobalState()
   return (
     <>
       <Box padding={2}>
@@ -45,8 +40,8 @@ export function SocialSecurityBenefits({ state, setState }: Props) {
         <TableHead>
           <TableRow>
             <TableCell>Age</TableCell>
-            <TableCell>{state.person1Name}</TableCell>
-            <TableCell>{state.person2Name}</TableCell>
+            <TableCell>{formState.person1Name}</TableCell>
+            <TableCell>{formState.person2Name}</TableCell>
             <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
               Total
             </TableCell>
@@ -59,26 +54,26 @@ export function SocialSecurityBenefits({ state, setState }: Props) {
                 <TableCell>{62 + index}</TableCell>
                 <TableCell>
                   <MoneyInput
-                    value={state.person1SocialSecurity[index]}
+                    value={formState.person1SocialSecurity[index]}
                     onChange={(x) => {
                       const person1SocialSecurity = [
-                        ...state.person1SocialSecurity,
+                        ...formState.person1SocialSecurity,
                       ]
                       person1SocialSecurity[index] = x
-                      setState({ ...state, person1SocialSecurity })
+                      setFormState({ ...formState, person1SocialSecurity })
                     }}
                     decimals={0}
                   />
                 </TableCell>
                 <TableCell>
                   <MoneyInput
-                    value={state.person2SocialSecurity[index]}
+                    value={formState.person2SocialSecurity[index]}
                     onChange={(x) => {
                       const person2SocialSecurity = [
-                        ...state.person2SocialSecurity,
+                        ...formState.person2SocialSecurity,
                       ]
                       person2SocialSecurity[index] = x
-                      setState({ ...state, person2SocialSecurity })
+                      setFormState({ ...formState, person2SocialSecurity })
                     }}
                     decimals={0}
                   />
@@ -87,8 +82,8 @@ export function SocialSecurityBenefits({ state, setState }: Props) {
                   <Stack direction="row" spacing={1}>
                     <Typography>
                       {toMoney(
-                        toDecimal(state.person1SocialSecurity[index]) +
-                          toDecimal(state.person2SocialSecurity[index]),
+                        toDecimal(formState.person1SocialSecurity[index]) +
+                          toDecimal(formState.person2SocialSecurity[index]),
                         0
                       )}{" "}
                       mo
@@ -98,8 +93,12 @@ export function SocialSecurityBenefits({ state, setState }: Props) {
                     <Typography>
                       {toMoney(
                         mathjs
-                          .chain(toDecimal(state.person1SocialSecurity[index]))
-                          .add(toDecimal(state.person2SocialSecurity[index]))
+                          .chain(
+                            toDecimal(formState.person1SocialSecurity[index])
+                          )
+                          .add(
+                            toDecimal(formState.person2SocialSecurity[index])
+                          )
                           .multiply(12)
                           .done(),
                         0

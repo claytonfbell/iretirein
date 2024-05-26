@@ -12,19 +12,14 @@ import {
   useTheme,
 } from "@mui/material"
 import { all, create } from "mathjs"
-import { Dispatch, SetStateAction } from "react"
-import { InputState } from "../InputState"
+import { useGlobalState } from "../GlobalStateProvider"
 import { toDecimal, toMoney } from "../util"
 import { MoneyInput } from "./MoneyInput"
 
 const mathjs = create(all, {})
 
-interface Props {
-  state: InputState
-  setState: Dispatch<SetStateAction<InputState>>
-}
-
-export function AssetBuckets({ state, setState }: Props) {
+export function AssetBuckets() {
+  const { formState, setFormState } = useGlobalState()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const width = isMobile ? 150 : 250
@@ -44,9 +39,9 @@ export function AssetBuckets({ state, setState }: Props) {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={!state.coastFire}
+                    checked={!formState.coastFire}
                     onChange={() =>
-                      setState((prev) => ({
+                      setFormState((prev) => ({
                         ...prev,
                         coastFire: !prev.coastFire,
                       }))
@@ -68,10 +63,10 @@ export function AssetBuckets({ state, setState }: Props) {
               <MoneyInput
                 label={"Roth & HSA"}
                 width={width}
-                value={state.bucket1Value}
+                value={formState.bucket1Value}
                 onChange={(bucket1Value) => {
-                  setState({
-                    ...state,
+                  setFormState({
+                    ...formState,
                     bucket1Value,
                   })
                 }}
@@ -82,11 +77,11 @@ export function AssetBuckets({ state, setState }: Props) {
               <MoneyInput
                 label={"Roth & HSA"}
                 width={width}
-                value={state.bucket1Contribution}
-                disabled={state.coastFire}
+                value={formState.bucket1Contribution}
+                disabled={formState.coastFire}
                 onChange={(bucket1Contribution) => {
-                  setState({
-                    ...state,
+                  setFormState({
+                    ...formState,
                     bucket1Contribution,
                   })
                 }}
@@ -98,10 +93,10 @@ export function AssetBuckets({ state, setState }: Props) {
               <MoneyInput
                 label={"Traditional"}
                 width={width}
-                value={state.bucket2Value}
+                value={formState.bucket2Value}
                 onChange={(bucket2Value) => {
-                  setState({
-                    ...state,
+                  setFormState({
+                    ...formState,
                     bucket2Value,
                   })
                 }}
@@ -111,11 +106,11 @@ export function AssetBuckets({ state, setState }: Props) {
               <MoneyInput
                 label={"Traditional"}
                 width={width}
-                value={state.bucket2Contribution}
-                disabled={state.coastFire}
+                value={formState.bucket2Contribution}
+                disabled={formState.coastFire}
                 onChange={(bucket2Contribution) => {
-                  setState({
-                    ...state,
+                  setFormState({
+                    ...formState,
                     bucket2Contribution,
                   })
                 }}
@@ -127,10 +122,10 @@ export function AssetBuckets({ state, setState }: Props) {
               <MoneyInput
                 label={"After Tax"}
                 width={width}
-                value={state.bucket3Value}
+                value={formState.bucket3Value}
                 onChange={(bucket3Value) => {
-                  setState({
-                    ...state,
+                  setFormState({
+                    ...formState,
                     bucket3Value,
                   })
                 }}
@@ -140,11 +135,11 @@ export function AssetBuckets({ state, setState }: Props) {
               <MoneyInput
                 label={"After Tax"}
                 width={width}
-                value={state.bucket3Contribution}
-                disabled={state.coastFire}
+                value={formState.bucket3Contribution}
+                disabled={formState.coastFire}
                 onChange={(bucket3Contribution) => {
-                  setState({
-                    ...state,
+                  setFormState({
+                    ...formState,
                     bucket3Contribution,
                   })
                 }}
@@ -157,9 +152,9 @@ export function AssetBuckets({ state, setState }: Props) {
               <Typography width={width} align="right" paddingRight={5}>
                 {toMoney(
                   mathjs
-                    .chain(toDecimal(state.bucket1Value))
-                    .add(toDecimal(state.bucket2Value))
-                    .add(toDecimal(state.bucket3Value))
+                    .chain(toDecimal(formState.bucket1Value))
+                    .add(toDecimal(formState.bucket2Value))
+                    .add(toDecimal(formState.bucket3Value))
                     .done()
                 )}
               </Typography>
@@ -167,12 +162,12 @@ export function AssetBuckets({ state, setState }: Props) {
             <TableCell>
               <Typography width={width} align="right" paddingRight={5}>
                 {toMoney(
-                  state.coastFire === true
+                  formState.coastFire === true
                     ? 0
                     : mathjs
-                        .chain(toDecimal(state.bucket1Contribution))
-                        .add(toDecimal(state.bucket2Contribution))
-                        .add(toDecimal(state.bucket3Contribution))
+                        .chain(toDecimal(formState.bucket1Contribution))
+                        .add(toDecimal(formState.bucket2Contribution))
+                        .add(toDecimal(formState.bucket3Contribution))
                         .done()
                 )}
               </Typography>

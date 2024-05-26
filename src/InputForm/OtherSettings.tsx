@@ -7,19 +7,15 @@ import {
   Typography,
 } from "@mui/material"
 import { all, create } from "mathjs"
-import { Dispatch, SetStateAction } from "react"
-import { InputState } from "../InputState"
+import { useGlobalState } from "../GlobalStateProvider"
 import { DecimalInput } from "./DecimalInput"
 import { MoneyInput } from "./MoneyInput"
 
 const mathjs = create(all, {})
 
-interface Props {
-  state: InputState
-  setState: Dispatch<SetStateAction<InputState>>
-}
+export function OtherSettings() {
+  const { formState, setFormState } = useGlobalState()
 
-export function OtherSettings({ state, setState }: Props) {
   return (
     <>
       <Box padding={2}>
@@ -28,28 +24,13 @@ export function OtherSettings({ state, setState }: Props) {
       <Table sx={{ marginBottom: 3 }}>
         <TableBody>
           <TableRow>
-            <TableCell>Current Price</TableCell>
-            <TableCell>
-              <MoneyInput
-                value={state.stockPrice}
-                onChange={(stockPrice) => {
-                  setState({
-                    ...state,
-                    stockPrice,
-                  })
-                }}
-                decimals={2}
-              />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Appreciation</TableCell>
+            <TableCell>Stock Appreciation</TableCell>
             <TableCell>
               <DecimalInput
-                value={state.stockAppreciation}
+                value={formState.stockAppreciation}
                 onChange={(stockAppreciation) => {
-                  setState({
-                    ...state,
+                  setFormState({
+                    ...formState,
                     stockAppreciation,
                   })
                 }}
@@ -59,13 +40,13 @@ export function OtherSettings({ state, setState }: Props) {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Dividend</TableCell>
+            <TableCell>Dividend Yield</TableCell>
             <TableCell>
               <DecimalInput
-                value={state.stockDividendRate}
+                value={formState.stockDividendRate}
                 onChange={(stockDividendRate) => {
-                  setState({
-                    ...state,
+                  setFormState({
+                    ...formState,
                     stockDividendRate,
                   })
                 }}
@@ -75,13 +56,13 @@ export function OtherSettings({ state, setState }: Props) {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Inflation</TableCell>
+            <TableCell>Inflation Rate</TableCell>
             <TableCell>
               <DecimalInput
-                value={state.inflationRate}
+                value={formState.inflationRate}
                 onChange={(inflationRate) => {
-                  setState({
-                    ...state,
+                  setFormState({
+                    ...formState,
                     inflationRate,
                   })
                 }}
@@ -91,29 +72,28 @@ export function OtherSettings({ state, setState }: Props) {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Tax Rate</TableCell>
+            <TableCell>Pre Medicare Monthly Insurance</TableCell>
             <TableCell>
-              <DecimalInput
-                value={state.effectiveTaxRate}
-                onChange={(effectiveTaxRate) => {
-                  setState({
-                    ...state,
-                    effectiveTaxRate,
+              <MoneyInput
+                value={formState.preMedicareInsuance}
+                onChange={(preMedicareInsuance) => {
+                  setFormState({
+                    ...formState,
+                    preMedicareInsuance,
                   })
                 }}
-                decimals={5}
-                percentage
+                decimals={0}
               />
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Withdrawal Rate</TableCell>
+            <TableCell>Safe Withdrawal Rate</TableCell>
             <TableCell>
               <DecimalInput
-                value={state.withdrawalRate}
+                value={formState.withdrawalRate}
                 onChange={(withdrawalRate) => {
-                  setState({
-                    ...state,
+                  setFormState({
+                    ...formState,
                     withdrawalRate,
                   })
                 }}

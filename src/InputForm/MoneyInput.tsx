@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function MoneyInput({
-  value,
+  value = "",
   onChange,
   decimals = 2,
   disabled,
