@@ -55,7 +55,11 @@ export function FinancialIndependenceSummary({ data }: Props) {
         >
           <Container maxWidth="sm">
             <Stack padding={2} spacing={1}>
-              <Stack direction="row" justifyContent={"space-between"}>
+              <Stack
+                direction="row"
+                spacing={1}
+                justifyContent={"space-between"}
+              >
                 <Stack
                   spacing={{ sm: 1, xs: 0 }}
                   direction={{ xs: "column", sm: "row" }}
@@ -130,6 +134,7 @@ function BlueTitle({ children }: { children: React.ReactNode }) {
         fontSize: 24,
         fontWeight: 700,
         color: (theme) => theme.palette.primary.main,
+        whiteSpace: "nowrap",
       }}
     >
       {children}

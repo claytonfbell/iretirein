@@ -1,4 +1,4 @@
-import { Stack, TextField } from "@mui/material"
+import { TextField } from "@mui/material"
 import { all, create } from "mathjs"
 import { useEffect, useState } from "react"
 import { toDecimal } from "../util"
@@ -29,32 +29,30 @@ export function DecimalInput({
   }, [value])
 
   return (
-    <Stack direction="row" spacing={1}>
-      <TextField
-        size="small"
-        value={inputValue}
-        onChange={(e) => {
-          let newValue = e.target.value
+    <TextField
+      size="small"
+      fullWidth
+      value={inputValue}
+      onChange={(e) => {
+        let newValue = e.target.value
 
-          // internal state
-          let parts = newValue.split(".")
-          if (parts.length > 2) {
-            setInputValue(parts.slice(0, 2).join("."))
-          } else {
-            setInputValue(newValue)
-          }
+        // internal state
+        let parts = newValue.split(".")
+        if (parts.length > 2) {
+          setInputValue(parts.slice(0, 2).join("."))
+        } else {
+          setInputValue(newValue)
+        }
 
-          // external state
-          if (percentage) {
-            newValue = `${mathjs.divide(toDecimal(newValue), 100)}`
-          }
-          onChange(toDecimal(newValue).toFixed(decimals))
-        }}
-        InputProps={{
-          endAdornment: percentage ? "%" : undefined,
-        }}
-      />
-      {/* <pre>{JSON.stringify({ value, inputValue }, null, 2)}</pre> */}
-    </Stack>
+        // external state
+        if (percentage) {
+          newValue = `${mathjs.divide(toDecimal(newValue), 100)}`
+        }
+        onChange(toDecimal(newValue).toFixed(decimals))
+      }}
+      InputProps={{
+        endAdornment: percentage ? "%" : undefined,
+      }}
+    />
   )
 }

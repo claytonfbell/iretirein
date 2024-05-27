@@ -26,8 +26,8 @@ export function Calcuate() {
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"))
 
   return (
-    <Box>
-      {/* <pre>{JSON.stringify({ monthRows }, null, 2)}</pre> */}
+    <Stack spacing={1}>
+      <Typography variant="h1">Projection</Typography>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
@@ -144,7 +144,7 @@ export function Calcuate() {
         </TableBody>
       </Table>
       <FinancialIndependenceSummary data={financialIndependenceMonth} />
-    </Box>
+    </Stack>
   )
 }
 

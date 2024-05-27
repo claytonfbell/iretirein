@@ -27,7 +27,7 @@ export default function Home() {
         }}
       />
       <Container sx={{ marginTop: 3, paddingLeft: 0, paddingRight: 0 }}>
-        <Stack spacing={3}>
+        <Stack spacing={4}>
           <InputForm />
           <Calcuate />
         </Stack>

@@ -1,7 +1,7 @@
 import {
-  Box,
   Checkbox,
   FormControlLabel,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -11,31 +11,24 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material"
-import { all, create } from "mathjs"
 import { useGlobalState } from "../GlobalStateProvider"
-import { toDecimal, toMoney } from "../util"
+import { formatPennies, toPennies } from "../util"
 import { MoneyInput } from "./MoneyInput"
 
-const mathjs = create(all, {})
-
-export function AssetBuckets() {
+export function Savings() {
   const { formState, setFormState } = useGlobalState()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
   const width = isMobile ? 150 : 250
 
   return (
-    <>
-      <Box padding={2}>
-        <Typography variant="h2">Your Retirement Buckets</Typography>
-      </Box>
-      <Table sx={{ marginBottom: 3, width: "100%" }}>
+    <Stack>
+      <Typography variant="h1">Savings</Typography>
+      <Table>
         <TableHead>
           <TableRow>
-            <TableCell>
-              <Typography>Current Value</Typography>
-            </TableCell>
-            <TableCell>
+            <TableCell>Current Value</TableCell>
+            <TableCell align={isMobile ? "right" : undefined}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -55,6 +48,7 @@ export function AssetBuckets() {
                 }
               />
             </TableCell>
+            {!isMobile ? <TableCell align="right">Yearly</TableCell> : null}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -73,7 +67,7 @@ export function AssetBuckets() {
               />
             </TableCell>
 
-            <TableCell>
+            <TableCell align={isMobile ? "right" : undefined}>
               <MoneyInput
                 label={"Roth & HSA"}
                 width={width}
@@ -87,6 +81,18 @@ export function AssetBuckets() {
                 }}
               />
             </TableCell>
+
+            {!isMobile ? (
+              <TableCell align="right">
+                <Typography align="right">
+                  {formatPennies(
+                    formState.coastFire === true
+                      ? 0
+                      : toPennies(formState.bucket1Contribution) * 12
+                  )}
+                </Typography>
+              </TableCell>
+            ) : null}
           </TableRow>
           <TableRow>
             <TableCell>
@@ -102,7 +108,7 @@ export function AssetBuckets() {
                 }}
               />
             </TableCell>
-            <TableCell>
+            <TableCell align={isMobile ? "right" : undefined}>
               <MoneyInput
                 label={"Traditional"}
                 width={width}
@@ -116,6 +122,18 @@ export function AssetBuckets() {
                 }}
               />
             </TableCell>
+
+            {!isMobile ? (
+              <TableCell align="right">
+                <Typography align="right">
+                  {formatPennies(
+                    formState.coastFire === true
+                      ? 0
+                      : toPennies(formState.bucket2Contribution) * 12
+                  )}
+                </Typography>
+              </TableCell>
+            ) : null}
           </TableRow>
           <TableRow>
             <TableCell>
@@ -131,7 +149,7 @@ export function AssetBuckets() {
                 }}
               />
             </TableCell>
-            <TableCell>
+            <TableCell align={isMobile ? "right" : undefined}>
               <MoneyInput
                 label={"After Tax"}
                 width={width}
@@ -145,36 +163,58 @@ export function AssetBuckets() {
                 }}
               />
             </TableCell>
+
+            {!isMobile ? (
+              <TableCell align="right">
+                <Typography align="right">
+                  {formatPennies(
+                    formState.coastFire === true
+                      ? 0
+                      : toPennies(formState.bucket3Contribution) * 12
+                  )}
+                </Typography>
+              </TableCell>
+            ) : null}
           </TableRow>
 
           <TableRow>
             <TableCell>
               <Typography width={width} align="right" paddingRight={5}>
-                {toMoney(
-                  mathjs
-                    .chain(toDecimal(formState.bucket1Value))
-                    .add(toDecimal(formState.bucket2Value))
-                    .add(toDecimal(formState.bucket3Value))
-                    .done()
+                {formatPennies(
+                  toPennies(formState.bucket1Value) +
+                    toPennies(formState.bucket2Value) +
+                    toPennies(formState.bucket3Value)
                 )}
               </Typography>
             </TableCell>
-            <TableCell>
+            <TableCell align={isMobile ? "right" : undefined}>
               <Typography width={width} align="right" paddingRight={5}>
-                {toMoney(
+                {formatPennies(
                   formState.coastFire === true
                     ? 0
-                    : mathjs
-                        .chain(toDecimal(formState.bucket1Contribution))
-                        .add(toDecimal(formState.bucket2Contribution))
-                        .add(toDecimal(formState.bucket3Contribution))
-                        .done()
+                    : toPennies(formState.bucket1Contribution) +
+                        toPennies(formState.bucket2Contribution) +
+                        toPennies(formState.bucket3Contribution)
                 )}
               </Typography>
             </TableCell>
+
+            {!isMobile ? (
+              <TableCell align="right">
+                <Typography align="right">
+                  {formatPennies(
+                    formState.coastFire === true
+                      ? 0
+                      : toPennies(formState.bucket1Contribution) * 12 +
+                          toPennies(formState.bucket2Contribution) * 12 +
+                          toPennies(formState.bucket3Contribution) * 12
+                  )}
+                </Typography>
+              </TableCell>
+            ) : null}
           </TableRow>
         </TableBody>
       </Table>
-    </>
+    </Stack>
   )
 }
