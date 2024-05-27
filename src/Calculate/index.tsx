@@ -455,6 +455,13 @@ export function Calcuate() {
         <TableBody>
           {yearRows.map((row) => {
             const month = dayjs().add(row.month, "month")
+
+            // row.contributions - row.withdrawals but not negative
+            const positiveChangeValue =
+              row.contributions - row.withdrawals > 0
+                ? row.contributions - row.withdrawals
+                : row.withdrawals - row.contributions
+
             return (
               <TableRow key={row.month}>
                 <TableCell>{month.format("MMM YYYY")}</TableCell>
@@ -502,7 +509,7 @@ export function Calcuate() {
                             : "inherit",
                       }}
                     >
-                      {formatPennies(row.contributions - row.withdrawals)}
+                      {formatPennies(positiveChangeValue)}
                     </Typography>
                   </TableCell>
                 )}
