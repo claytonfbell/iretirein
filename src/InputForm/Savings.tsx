@@ -1,4 +1,5 @@
 import {
+  Box,
   Checkbox,
   FormControlLabel,
   Stack,
@@ -11,6 +12,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material"
+import { useEffect, useRef, useState } from "react"
 import { useGlobalState } from "../GlobalStateProvider"
 import { formatPennies, toPennies } from "../util"
 import { MoneyInput } from "./MoneyInput"
@@ -19,7 +21,21 @@ export function Savings() {
   const { formState, setFormState } = useGlobalState()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
-  const width = isMobile ? 150 : 250
+  const boxRef = useRef<HTMLDivElement>(null)
+
+  // observe the boxRef width if it changes
+  const [width, setWidth] = useState(0)
+  useEffect(() => {
+    if (boxRef.current) {
+      const observer = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          setWidth(entry.contentRect.width)
+        }
+      })
+      observer.observe(boxRef.current)
+      return () => observer.disconnect()
+    }
+  }, [])
 
   return (
     <Stack>
@@ -27,8 +43,10 @@ export function Savings() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Current Value</TableCell>
-            <TableCell align={isMobile ? "right" : undefined}>
+            <TableCellBox>
+              <Typography paddingRight={5}>Current Value</Typography>
+            </TableCellBox>
+            <TableCellBox variant="right" padRight>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -47,16 +65,15 @@ export function Savings() {
                   </Typography>
                 }
               />
-            </TableCell>
+            </TableCellBox>
             {!isMobile ? <TableCell align="right">Yearly</TableCell> : null}
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell>
+            <TableCellBox>
               <MoneyInput
                 label={"Roth & HSA"}
-                width={width}
                 value={formState.bucket1Value}
                 onChange={(bucket1Value) => {
                   setFormState({
@@ -65,12 +82,11 @@ export function Savings() {
                   })
                 }}
               />
-            </TableCell>
+            </TableCellBox>
 
-            <TableCell align={isMobile ? "right" : undefined}>
+            <TableCellBox>
               <MoneyInput
                 label={"Roth & HSA"}
-                width={width}
                 value={formState.bucket1Contribution}
                 disabled={formState.coastFire}
                 onChange={(bucket1Contribution) => {
@@ -80,7 +96,7 @@ export function Savings() {
                   })
                 }}
               />
-            </TableCell>
+            </TableCellBox>
 
             {!isMobile ? (
               <TableCell align="right">
@@ -95,10 +111,9 @@ export function Savings() {
             ) : null}
           </TableRow>
           <TableRow>
-            <TableCell>
+            <TableCellBox>
               <MoneyInput
                 label={"Traditional"}
-                width={width}
                 value={formState.bucket2Value}
                 onChange={(bucket2Value) => {
                   setFormState({
@@ -107,11 +122,10 @@ export function Savings() {
                   })
                 }}
               />
-            </TableCell>
-            <TableCell align={isMobile ? "right" : undefined}>
+            </TableCellBox>
+            <TableCellBox>
               <MoneyInput
                 label={"Traditional"}
-                width={width}
                 value={formState.bucket2Contribution}
                 disabled={formState.coastFire}
                 onChange={(bucket2Contribution) => {
@@ -121,7 +135,7 @@ export function Savings() {
                   })
                 }}
               />
-            </TableCell>
+            </TableCellBox>
 
             {!isMobile ? (
               <TableCell align="right">
@@ -136,10 +150,9 @@ export function Savings() {
             ) : null}
           </TableRow>
           <TableRow>
-            <TableCell>
+            <TableCellBox>
               <MoneyInput
                 label={"After Tax"}
-                width={width}
                 value={formState.bucket3Value}
                 onChange={(bucket3Value) => {
                   setFormState({
@@ -148,11 +161,10 @@ export function Savings() {
                   })
                 }}
               />
-            </TableCell>
-            <TableCell align={isMobile ? "right" : undefined}>
+            </TableCellBox>
+            <TableCellBox>
               <MoneyInput
                 label={"After Tax"}
-                width={width}
                 value={formState.bucket3Contribution}
                 disabled={formState.coastFire}
                 onChange={(bucket3Contribution) => {
@@ -162,7 +174,7 @@ export function Savings() {
                   })
                 }}
               />
-            </TableCell>
+            </TableCellBox>
 
             {!isMobile ? (
               <TableCell align="right">
@@ -178,17 +190,17 @@ export function Savings() {
           </TableRow>
 
           <TableRow>
-            <TableCell>
-              <Typography width={width} align="right" paddingRight={5}>
+            <TableCellBox>
+              <Typography paddingRight={5}>
                 {formatPennies(
                   toPennies(formState.bucket1Value) +
                     toPennies(formState.bucket2Value) +
                     toPennies(formState.bucket3Value)
                 )}
               </Typography>
-            </TableCell>
-            <TableCell align={isMobile ? "right" : undefined}>
-              <Typography width={width} align="right" paddingRight={5}>
+            </TableCellBox>
+            <TableCellBox variant="right">
+              <Typography align="right" paddingRight={5}>
                 {formatPennies(
                   formState.coastFire === true
                     ? 0
@@ -197,10 +209,10 @@ export function Savings() {
                         toPennies(formState.bucket3Contribution)
                 )}
               </Typography>
-            </TableCell>
+            </TableCellBox>
 
             {!isMobile ? (
-              <TableCell align="right">
+              <TableCell align="right" sx={{ minWidth: 120 }}>
                 <Typography align="right">
                   {formatPennies(
                     formState.coastFire === true
@@ -216,5 +228,33 @@ export function Savings() {
         </TableBody>
       </Table>
     </Stack>
+  )
+}
+
+interface TableCellBoxProps {
+  children: React.ReactNode
+  variant?: "left" | "right"
+  padRight?: boolean
+}
+
+function TableCellBox({
+  children,
+  padRight = false,
+  variant = "left",
+}: TableCellBoxProps) {
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
+  return (
+    <TableCell align={variant === "right" && isMobile ? "right" : undefined}>
+      <Box
+        sx={{
+          textAlign: "right",
+          paddingRight: padRight ? 2 : 0,
+        }}
+        maxWidth={256}
+      >
+        {children}
+      </Box>
+    </TableCell>
   )
 }

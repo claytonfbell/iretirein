@@ -23,10 +23,9 @@ export function SettingsDrawer({ open, onClose }: Props) {
           width={400}
           padding={2}
         >
-          <Stack spacing={3}>
-            <Stack spacing={1}>
-              <Stack>
-                <Label>Name</Label>
+          <Stack spacing={2}>
+            <FormItemRow>
+              <FormItem label="Name">
                 <TextField
                   size="small"
                   value={formState.person1Name}
@@ -34,21 +33,20 @@ export function SettingsDrawer({ open, onClose }: Props) {
                     setFormState({ ...formState, person1Name: e.target.value })
                   }}
                 />
-              </Stack>
-              <Stack>
-                <Label>Birthday</Label>
+              </FormItem>
+
+              <FormItem label="Birthday">
                 <DatePicker
                   value={formState.person1Birthday}
                   onChange={(person1Birthday) => {
                     setFormState({ ...formState, person1Birthday })
                   }}
                 />
-              </Stack>
-            </Stack>
+              </FormItem>
+            </FormItemRow>
 
-            <Stack spacing={1}>
-              <Stack>
-                <Label>Name</Label>
+            <FormItemRow>
+              <FormItem label="Name">
                 <TextField
                   size="small"
                   value={formState.person2Name}
@@ -56,104 +54,74 @@ export function SettingsDrawer({ open, onClose }: Props) {
                     setFormState({ ...formState, person2Name: e.target.value })
                   }}
                 />
-              </Stack>
-              <Stack>
-                <Label>Birthday</Label>
+              </FormItem>
+              <FormItem label="Birthday">
                 <DatePicker
                   value={formState.person2Birthday}
                   onChange={(person2Birthday) => {
                     setFormState({ ...formState, person2Birthday })
                   }}
                 />
-              </Stack>
-            </Stack>
+              </FormItem>
+            </FormItemRow>
 
-            <Stack spacing={1}>
-              <Stack>
-                <Label>Desired Income</Label>
+            <FormItemRow>
+              <FormItem label="Desired Infome">
                 <MoneyInput
                   value={formState.requiredIncome}
-                  onChange={(takeHomePay) => {
-                    setFormState({
-                      ...formState,
-                      requiredIncome: takeHomePay,
-                    })
+                  onChange={(requiredIncome) => {
+                    setFormState({ ...formState, requiredIncome })
                   }}
                   decimals={0}
                 />
-              </Stack>
-            </Stack>
+              </FormItem>
+              <FormItem label="Health Insurance">
+                <MoneyInput
+                  value={formState.preMedicareInsuance}
+                  onChange={(preMedicareInsuance) => {
+                    setFormState({ ...formState, preMedicareInsuance })
+                  }}
+                  decimals={0}
+                />
+              </FormItem>
+            </FormItemRow>
 
-            <Stack spacing={1}>
-              <Stack>
-                <Label>Stock Appreciation</Label>
+            <FormItemRow>
+              <FormItem label="Stock Appreciation">
                 <DecimalInput
                   value={formState.stockAppreciation}
                   onChange={(stockAppreciation) => {
-                    setFormState({
-                      ...formState,
-                      stockAppreciation,
-                    })
+                    setFormState({ ...formState, stockAppreciation })
                   }}
                   decimals={4}
                   percentage
                 />
-              </Stack>
-            </Stack>
-
-            <Stack spacing={1}>
-              <Stack>
-                <Label>Dividend Yield</Label>
+              </FormItem>
+              <FormItem label="Dividend Yield">
                 <DecimalInput
                   value={formState.stockDividendRate}
                   onChange={(stockDividendRate) => {
-                    setFormState({
-                      ...formState,
-                      stockDividendRate,
-                    })
+                    setFormState({ ...formState, stockDividendRate })
                   }}
                   decimals={5}
                   percentage
                 />
-              </Stack>
-            </Stack>
+              </FormItem>
+            </FormItemRow>
 
-            <Stack spacing={1}>
-              <Stack>
-                <Label>Inflation Rate</Label>
+            <FormItemRow>
+              <FormItem label="Inflation Rate">
                 <DecimalInput
                   value={formState.inflationRate}
                   onChange={(inflationRate) => {
-                    setFormState({
-                      ...formState,
-                      inflationRate,
-                    })
+                    setFormState({ ...formState, inflationRate })
                   }}
                   decimals={5}
                   percentage
                 />
-              </Stack>
-            </Stack>
+              </FormItem>
 
-            <Stack spacing={1}>
-              <Stack>
-                <Label>Pre Medicare Monthly Insurance</Label>
-                <MoneyInput
-                  value={formState.preMedicareInsuance}
-                  onChange={(preMedicareInsuance) => {
-                    setFormState({
-                      ...formState,
-                      preMedicareInsuance,
-                    })
-                  }}
-                  decimals={0}
-                />
-              </Stack>
-            </Stack>
-
-            <Stack spacing={1}>
-              <Stack>
-                <Label>Safe Withdrawal Rate</Label>
+              <FormItem label="Withdrawal Rate">
                 <DecimalInput
                   value={formState.withdrawalRate}
                   onChange={(withdrawalRate) => {
@@ -165,8 +133,10 @@ export function SettingsDrawer({ open, onClose }: Props) {
                   decimals={5}
                   percentage
                 />
-              </Stack>
-            </Stack>
+              </FormItem>
+            </FormItemRow>
+
+            <Stack spacing={1}></Stack>
           </Stack>
           <Button
             variant="contained"
@@ -179,5 +149,28 @@ export function SettingsDrawer({ open, onClose }: Props) {
         </Stack>
       </Drawer>
     </>
+  )
+}
+
+function FormItem({
+  label,
+  children,
+}: {
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <Stack>
+      <Label>{label}</Label>
+      {children}
+    </Stack>
+  )
+}
+
+function FormItemRow({ children }: { children: React.ReactNode }) {
+  return (
+    <Stack spacing={2} direction="row" justifyContent="space-evenly">
+      {children}
+    </Stack>
   )
 }

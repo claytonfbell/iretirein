@@ -25,6 +25,7 @@ export function MoneyInput({
   const inputRef = useRef<HTMLInputElement>(null)
   return (
     <TextField
+      fullWidth
       label={label}
       size="small"
       value={value}
