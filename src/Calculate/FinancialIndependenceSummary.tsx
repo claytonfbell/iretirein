@@ -112,10 +112,7 @@ export function FinancialIndependenceSummary({
                   </LineItem>
                   {monthReachOneMillion !== null ? (
                     <LineItem label="1M Goal">
-                      {dayjs()
-                        .add(monthReachOneMillion.month, "months")
-                        .format("MMM YYYY")}
-                      {` - ${oneMillYears} ${oneMillMonths}`}
+                      {`${oneMillYears} ${oneMillMonths}`}
                     </LineItem>
                   ) : null}
                   <Box>
