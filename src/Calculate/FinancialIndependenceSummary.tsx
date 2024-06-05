@@ -19,18 +19,31 @@ import { RowItem } from "./RowItem"
 
 interface Props {
   data: RowItem
+  monthReachOneMillion: RowItem | null
 }
 
-export function FinancialIndependenceSummary({ data }: Props) {
+export function FinancialIndependenceSummary({
+  data,
+  monthReachOneMillion,
+}: Props) {
   const { state } = useGlobalState()
 
   const date = dayjs().add(data.month, "month")
   // in x years and y months
   const years = Math.floor(data.month / 12)
   const months = data.month % 12
-  const formattedYears = years > 0 ? `${years} year${years > 1 ? "s" : ""}` : ""
-  const formattedMonths =
+  const formatYears = (years: number) =>
+    years > 0 ? `${years} year${years > 1 ? "s" : ""}` : ""
+  const formatMonths = (months: number) =>
     months > 0 ? `${months} month${months > 1 ? "s" : ""}` : ""
+
+  const formattedYears = formatYears(years)
+  const formattedMonths = formatMonths(months)
+
+  const oneMillYears = formatYears(
+    Math.floor((monthReachOneMillion?.month || 0) / 12)
+  )
+  const oneMillMonths = formatMonths((monthReachOneMillion?.month || 0) % 12)
 
   const person1Age = date.diff(state.person1Birthday, "year")
   const person2Age = date.diff(state.person2Birthday, "year")
@@ -78,6 +91,7 @@ export function FinancialIndependenceSummary({ data }: Props) {
                   <BlueTitle>{formattedMonths}</BlueTitle>
                 </Stack>
               </Stack>
+
               <Collapse in={open}>
                 <Stack spacing={1}>
                   <LineItem label="Roth & HSA">
@@ -90,9 +104,20 @@ export function FinancialIndependenceSummary({ data }: Props) {
                     {formatPennies(data.bucket3.endingValue)}
                   </LineItem>
                   <Divider />
-                  <LineItem label="Portfolio Value" bold>
+                  <LineItem label="FI Goal" bold>
                     {formatPennies(data.endingValue)}
                   </LineItem>
+                  <LineItem label="Current">
+                    {formatPennies(currentPortfolioValue)}
+                  </LineItem>
+                  {monthReachOneMillion !== null ? (
+                    <LineItem label="1M Goal">
+                      {dayjs()
+                        .add(monthReachOneMillion.month, "months")
+                        .format("MMM YYYY")}
+                      {` - ${oneMillYears} ${oneMillMonths}`}
+                    </LineItem>
+                  ) : null}
                   <Box>
                     <Typography
                       align="center"

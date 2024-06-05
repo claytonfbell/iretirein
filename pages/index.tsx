@@ -26,7 +26,7 @@ export default function Home() {
           backgroundColor: theme.palette.primary.main,
         }}
       />
-      <Container sx={{ marginTop: 3, paddingLeft: 0, paddingRight: 0 }}>
+      <Container sx={{ marginTop: 3 }}>
         <Stack spacing={4}>
           <InputForm />
           <Calcuate />

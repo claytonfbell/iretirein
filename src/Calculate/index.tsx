@@ -21,7 +21,8 @@ const DEBUG = false
 
 export function Calcuate() {
   const { state } = useGlobalState()
-  const { yearRows, financialIndependenceMonth } = useCalculate()
+  const { yearRows, financialIndependenceMonth, monthReachOneMillion } =
+    useCalculate()
   const theme = useTheme()
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"))
 
@@ -143,7 +144,10 @@ export function Calcuate() {
           })}
         </TableBody>
       </Table>
-      <FinancialIndependenceSummary data={financialIndependenceMonth} />
+      <FinancialIndependenceSummary
+        data={financialIndependenceMonth}
+        monthReachOneMillion={monthReachOneMillion}
+      />
     </Stack>
   )
 }
