@@ -42,7 +42,7 @@ export function useGetDividends() {
     (value: number, month: number) => {
       const isDividendMonth = dayjs().add(month, "month").month() % 3 === 0
       return isDividendMonth
-        ? (value * toDecimal(state.stockDividendRate)) / 12
+        ? (value * toDecimal(state.stockDividendRate)) / 4
         : 0
     },
     [state.stockDividendRate]
