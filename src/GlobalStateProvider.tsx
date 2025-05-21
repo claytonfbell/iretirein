@@ -50,6 +50,8 @@ export function GlobalStateProvider(props: Props) {
       "$1,809",
       "$2,011",
     ],
+    person1SocialSecurityAge: "67",
+    person2SocialSecurityAge: "67",
     bucket1Value: "$520",
     bucket1Contribution: "$270",
     bucket2Value: "$1,024",

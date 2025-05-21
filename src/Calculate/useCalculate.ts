@@ -34,8 +34,16 @@ export function useCalculate() {
       // rough goal is to have 25x required income + 1M
       const roughPortfolioGoalStart =
         (toPennies(state.requiredIncome) -
-          toPennies(state.person1SocialSecurity[0]) -
-          toPennies(state.person2SocialSecurity[0])) /
+          toPennies(
+            state.person1SocialSecurity[
+              parseInt(state.person1SocialSecurityAge) - 62
+            ]
+          ) -
+          toPennies(
+            state.person2SocialSecurity[
+              parseInt(state.person2SocialSecurityAge) - 62
+            ]
+          )) /
           toDecimal(state.withdrawalRate) -
         toPennies("1000000")
       const roughPortfolioGoalEnd =
@@ -301,11 +309,19 @@ export function useCalculate() {
 
         // calculate withdrawals
         const person1SocialSecurity =
-          month >= monthsUntilPersonReachesAge("person1", 62)
+          month >=
+          monthsUntilPersonReachesAge(
+            "person1",
+            parseInt(state.person1SocialSecurityAge)
+          )
             ? adjustForInflation(person1BaseSocialSecurity, month)
             : 0
         const person2SocialSecurity =
-          month >= monthsUntilPersonReachesAge("person2", 62)
+          month >=
+          monthsUntilPersonReachesAge(
+            "person2",
+            parseInt(state.person2SocialSecurityAge)
+          )
             ? adjustForInflation(person2BaseSocialSecurity, month)
             : 0
 

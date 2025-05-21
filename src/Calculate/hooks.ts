@@ -56,40 +56,43 @@ export function useBaseSocialSecurity() {
   const { state } = useGlobalState()
   return useCallback(
     (person: Person, month: number) => {
-      const index = Math.min(
-        8,
-        Math.max(
-          0,
-          Math.floor(
-            dayjs()
-              .add(month, "month")
-              .diff(
-                dayjs(
-                  person === "person1"
-                    ? state.person1Birthday
-                    : state.person2Birthday
-                ).add(62, "year"),
-                "months"
-              ) / 12
-          )
+      const personIsCollecting: boolean = dayjs(
+        person === "person1" ? state.person1Birthday : state.person2Birthday
+      )
+        .add(
+          person === "person1"
+            ? parseInt(state.person1SocialSecurityAge)
+            : parseInt(state.person2SocialSecurityAge),
+          "year"
         )
-      )
-      return toPennies(
-        person === "person1"
-          ? state.person1SocialSecurity[index]
-          : state.person2SocialSecurity[index]
-      )
+        .isAfter(dayjs().add(month, "month"))
+
+      if (!personIsCollecting) {
+        return 0
+      } else {
+        const index =
+          parseInt(
+            person === "person1"
+              ? state.person1SocialSecurityAge
+              : state.person2SocialSecurityAge
+          ) - 62
+        return person === "person1"
+          ? toPennies(state.person1SocialSecurity[index])
+          : toPennies(state.person2SocialSecurity[index])
+      }
     },
     [
       state.person1Birthday,
       state.person1SocialSecurity,
       state.person2Birthday,
       state.person2SocialSecurity,
+      state.person1SocialSecurityAge,
+      state.person2SocialSecurityAge,
     ]
   )
 }
 
-// find social security gap, the missed income util reaching 62
+// find social security gap, the missed income util reaching social security age
 export function useCalculateSocialSecurityGap() {
   const { state } = useGlobalState()
   const adjustForInflation = useAdjustForInflation()
@@ -97,18 +100,27 @@ export function useCalculateSocialSecurityGap() {
   return useCallback(
     (person: Person, month: number) => {
       let socialSecurityGap = 0
-      const age62Date = dayjs(
+      const startSSDate = dayjs(
         person === "person1" ? state.person1Birthday : state.person2Birthday
-      ).add(62, "year")
+      ).add(
+        person === "person1"
+          ? parseInt(state.person1SocialSecurityAge)
+          : parseInt(state.person2SocialSecurityAge),
+        "year"
+      )
       let date = dayjs().add(month, "month")
-      while (date.isBefore(age62Date)) {
+      while (date.isBefore(startSSDate)) {
         socialSecurityGap =
           socialSecurityGap +
           adjustForInflation(
             toPennies(
               person === "person1"
-                ? state.person1SocialSecurity[0]
-                : state.person2SocialSecurity[0]
+                ? state.person1SocialSecurity[
+                    parseInt(state.person1SocialSecurityAge) - 62
+                  ]
+                : state.person2SocialSecurity[
+                    parseInt(state.person2SocialSecurityAge) - 62
+                  ]
             ),
             dayjs().diff(date, "month")
           )
@@ -122,6 +134,8 @@ export function useCalculateSocialSecurityGap() {
       state.person1SocialSecurity,
       state.person2Birthday,
       state.person2SocialSecurity,
+      state.person1SocialSecurityAge,
+      state.person2SocialSecurityAge,
     ]
   )
 }

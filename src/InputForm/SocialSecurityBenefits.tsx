@@ -4,6 +4,8 @@ import {
   Dialog,
   DialogContent,
   Link,
+  MenuItem,
+  Select,
   Stack,
   Table,
   TableBody,
@@ -73,6 +75,33 @@ export function SocialSecurityBenefits({ open, onClose }: Props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                  <TableRow>
+                    <TableCell></TableCell>
+                    <TableCell>
+                      <SelectSocialSecurityAge
+                        value={formState.person1SocialSecurityAge}
+                        onChange={(x) => {
+                          setFormState({
+                            ...formState,
+                            person1SocialSecurityAge: x,
+                          })
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <SelectSocialSecurityAge
+                        value={formState.person2SocialSecurityAge}
+                        onChange={(x) => {
+                          setFormState({
+                            ...formState,
+                            person2SocialSecurityAge: x,
+                          })
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+
                   {Array.from(Array(9).keys()).map((_, index) => {
                     return (
                       <TableRow key={index}>
@@ -168,5 +197,29 @@ export function SocialSecurityBenefits({ open, onClose }: Props) {
         </DialogContent>
       </Dialog>
     </>
+  )
+}
+
+function SelectSocialSecurityAge({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (newValue: string) => void
+}) {
+  return (
+    <Select
+      fullWidth
+      value={value}
+      onChange={(e) => {
+        onChange(e.target.value.toString())
+      }}
+    >
+      {[62, 63, 64, 65, 66, 67, 68, 69, 70].map((x) => (
+        <MenuItem key={x} value={x}>
+          {x}
+        </MenuItem>
+      ))}
+    </Select>
   )
 }

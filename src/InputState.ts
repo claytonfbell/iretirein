@@ -5,6 +5,8 @@ export interface InputState {
   person2Birthday: string | null
   person1SocialSecurity: string[]
   person2SocialSecurity: string[]
+  person1SocialSecurityAge: string
+  person2SocialSecurityAge: string
   bucket1Value: string
   bucket1Contribution: string
   bucket2Value: string
