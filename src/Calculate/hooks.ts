@@ -56,18 +56,22 @@ export function useBaseSocialSecurity() {
   const { state } = useGlobalState()
   return useCallback(
     (person: Person, month: number) => {
-      const personIsCollecting: boolean = dayjs(
+      const dateCollecting = dayjs(
         person === "person1" ? state.person1Birthday : state.person2Birthday
+      ).add(
+        person === "person1"
+          ? parseInt(state.person1SocialSecurityAge)
+          : parseInt(state.person2SocialSecurityAge),
+        "year"
       )
-        .add(
-          person === "person1"
-            ? parseInt(state.person1SocialSecurityAge)
-            : parseInt(state.person2SocialSecurityAge),
-          "year"
-        )
-        .isAfter(dayjs().add(month, "month"))
-
+      const monthDate = dayjs().add(month, "month")
+      const personIsCollecting: boolean = dateCollecting.isBefore(monthDate)
       if (!personIsCollecting) {
+        console.log(
+          `Person ${person} is not collecting social security yet at month ${month}. ${dateCollecting.format(
+            "YYYY-MM-DD"
+          )} monthDate ${monthDate.format("YYYY-MM-DD")}`
+        )
         return 0
       } else {
         const index =

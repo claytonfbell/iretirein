@@ -251,14 +251,6 @@ export function useCalculate() {
     // first remove the extra rows that reached goal
     monthRows = monthRows.filter((row) => !row.reachedGoal)
     const financialIndependenceMonth = monthRows[monthRows.length - 1]
-    const person1BaseSocialSecurity = baseSocialSecurity(
-      "person1",
-      financialIndependenceMonth.month
-    )
-    const person2BaseSocialSecurity = baseSocialSecurity(
-      "person2",
-      financialIndependenceMonth.month
-    )
 
     for (
       let month = financialIndependenceMonth.month + 1;
@@ -305,22 +297,14 @@ export function useCalculate() {
       newMonth.bucket3.contributions = 0
 
       // calculate withdrawals
-      const person1SocialSecurity =
-        month >=
-        monthsUntilPersonReachesAge(
-          "person1",
-          parseInt(state.person1SocialSecurityAge)
-        )
-          ? adjustForInflation(person1BaseSocialSecurity, month)
-          : 0
-      const person2SocialSecurity =
-        month >=
-        monthsUntilPersonReachesAge(
-          "person2",
-          parseInt(state.person2SocialSecurityAge)
-        )
-          ? adjustForInflation(person2BaseSocialSecurity, month)
-          : 0
+      const person1SocialSecurity = adjustForInflation(
+        baseSocialSecurity("person1", month),
+        month
+      )
+      const person2SocialSecurity = adjustForInflation(
+        baseSocialSecurity("person2", month),
+        month
+      )
 
       // health insurance costs
       const person1HealthInsuranceCost =
