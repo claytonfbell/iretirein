@@ -141,11 +141,19 @@ export function useCalculate() {
       if (previousRow?.reachedGoal !== true) {
         const person1BaseSocialSecurity = baseSocialSecurity(
           "person1",
-          row.month
+          1 +
+            monthsUntilPersonReachesAge(
+              "person1",
+              parseInt(state.person1SocialSecurityAge)
+            )
         )
         const person2BaseSocialSecurity = baseSocialSecurity(
           "person2",
-          row.month
+          1 +
+            monthsUntilPersonReachesAge(
+              "person1",
+              parseInt(state.person2SocialSecurityAge)
+            )
         )
         const person1AdjustedSocialSecurity = adjustForInflation(
           person1BaseSocialSecurity * 12,
@@ -182,10 +190,6 @@ export function useCalculate() {
           row.month
         )
 
-        const basePortfolioNeeded =
-          (incomeNeededFromPortfolio + person1Taxes + person2Taxes) /
-          toDecimal(state.withdrawalRate)
-
         // social security gaps
         const person1SocialSecurityGap = calculateSocialSecurityGap(
           "person1",
@@ -209,6 +213,10 @@ export function useCalculate() {
         )
         totalHealthInsuranceGap =
           person1HealthInsuranceGap + person2HealthInsuranceGap
+
+        const basePortfolioNeeded =
+          (incomeNeededFromPortfolio + person1Taxes + person2Taxes) /
+          toDecimal(state.withdrawalRate)
 
         // total portfolio needed
         const totalPortfolioNeeded =
