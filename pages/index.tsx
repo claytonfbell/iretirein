@@ -1,5 +1,6 @@
 import { Box, Container, CssBaseline, Stack, useTheme } from "@mui/material"
 import Head from "next/head"
+import { AppErrorBoundary } from "../src/AppErrorBoundary"
 import { Calcuate } from "../src/Calculate"
 import { InputForm } from "../src/InputForm"
 import { Providers } from "../src/Providers"
@@ -29,7 +30,9 @@ export default function Home() {
       <Container sx={{ marginTop: 3 }}>
         <Stack spacing={4}>
           <InputForm />
-          <Calcuate />
+          <AppErrorBoundary>
+            <Calcuate />
+          </AppErrorBoundary>
         </Stack>
       </Container>
     </Providers>
