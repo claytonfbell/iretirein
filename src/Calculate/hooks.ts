@@ -96,7 +96,6 @@ export function useBaseSocialSecurity() {
 export function useCalculateSocialSecurityGap() {
   const { state } = useGlobalState()
   const adjustForInflation = useAdjustForInflation()
-
   return useCallback(
     (person: Person, month: number) => {
       let socialSecurityGap = 0
@@ -109,21 +108,22 @@ export function useCalculateSocialSecurityGap() {
         "year"
       )
       let date = dayjs().add(month, "month")
+
+      const monthlySocialSecurity = adjustForInflation(
+        toPennies(
+          person === "person1"
+            ? state.person1SocialSecurity[
+                parseInt(state.person1SocialSecurityAge) - 62
+              ]
+            : state.person2SocialSecurity[
+                parseInt(state.person2SocialSecurityAge) - 62
+              ]
+        ),
+        month
+      )
+
       while (date.isBefore(startSSDate)) {
-        socialSecurityGap =
-          socialSecurityGap +
-          adjustForInflation(
-            toPennies(
-              person === "person1"
-                ? state.person1SocialSecurity[
-                    parseInt(state.person1SocialSecurityAge) - 62
-                  ]
-                : state.person2SocialSecurity[
-                    parseInt(state.person2SocialSecurityAge) - 62
-                  ]
-            ),
-            dayjs().diff(date, "month")
-          )
+        socialSecurityGap = socialSecurityGap + monthlySocialSecurity
         date = date.add(1, "month")
       }
       return socialSecurityGap
@@ -142,10 +142,12 @@ export function useCalculateSocialSecurityGap() {
 
 // find health insurance gaps, the private insurance cost until 65
 export function useCalculateHealthInsuranceGap() {
+  const adjustForInflation = useAdjustForInflation()
+
   const {
     state: { person1Birthday, person2Birthday, preMedicareInsuance },
   } = useGlobalState()
-  const adjustForInflation = useAdjustForInflation()
+
   return useCallback(
     (person: Person, month: number) => {
       let healthInsuranceGap = 0
@@ -153,13 +155,13 @@ export function useCalculateHealthInsuranceGap() {
         person === "person1" ? person1Birthday : person2Birthday
       ).add(65, "year")
       let date = dayjs().add(month, "month")
+
+      const adjustedPreMedicareInsuance = adjustForInflation(
+        toPennies(preMedicareInsuance),
+        month
+      )
       while (date.isBefore(age65Date)) {
-        healthInsuranceGap =
-          healthInsuranceGap +
-          adjustForInflation(
-            toPennies(preMedicareInsuance),
-            dayjs().diff(date, "month")
-          )
+        healthInsuranceGap = healthInsuranceGap + adjustedPreMedicareInsuance
         date = date.add(1, "month")
       }
       return healthInsuranceGap

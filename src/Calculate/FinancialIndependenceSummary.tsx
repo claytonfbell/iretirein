@@ -20,11 +20,15 @@ import { RowItem } from "./RowItem"
 interface Props {
   data: RowItem
   monthReachOneMillion: RowItem | null
+  totalHealthInsuranceGap: number
+  totalSocialSecurityGap: number
 }
 
 export function FinancialIndependenceSummary({
   data,
   monthReachOneMillion,
+  totalHealthInsuranceGap,
+  totalSocialSecurityGap,
 }: Props) {
   const { state } = useGlobalState()
 
@@ -98,11 +102,22 @@ export function FinancialIndependenceSummary({
                     {formatPennies(data.bucket1.endingValue)}
                   </LineItem>
                   <LineItem label="Traditional">
-                    {formatPennies(data.bucket2.endingValue)}
+                    {formatPennies(
+                      data.bucket2.endingValue -
+                        totalHealthInsuranceGap -
+                        totalSocialSecurityGap
+                    )}
+                  </LineItem>
+                  <LineItem label="Social Security Gap Bonds" secondary>
+                    {formatPennies(totalSocialSecurityGap)}
+                  </LineItem>
+                  <LineItem label="Health Insurance Bonds" secondary>
+                    {formatPennies(totalHealthInsuranceGap)}
                   </LineItem>
                   <LineItem label="After Tax">
                     {formatPennies(data.bucket3.endingValue)}
                   </LineItem>
+
                   <Divider />
                   <LineItem label="FI Goal" bold>
                     {formatPennies(data.endingValue)}
@@ -168,14 +183,22 @@ interface LineItemProps {
   label: React.ReactNode
   children: React.ReactNode
   bold?: boolean
+  secondary?: boolean
 }
 
-function LineItem({ label, children, bold }: LineItemProps) {
+function LineItem({ label, children, bold, secondary }: LineItemProps) {
   const fontWeight = bold ? 700 : undefined
 
   return (
     <Stack direction="row" justifyContent={"space-between"}>
-      <Typography fontWeight={fontWeight}>{label}</Typography>
+      <Typography
+        sx={{
+          marginLeft: secondary ? 2 : 0,
+        }}
+        fontWeight={fontWeight}
+      >
+        {label}
+      </Typography>
       <Typography fontWeight={fontWeight}>{children}</Typography>
     </Stack>
   )
